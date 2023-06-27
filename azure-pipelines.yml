@@ -43,7 +43,7 @@ steps:
       
       Write-Host "Copy the nested publish directory contents of .net application"
       
-      Get-ChildItem -Path $(System.DefaultWorkingDirectory)/_Organization Management/drop/Web -Filter Out -Recurse -Force |
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web' -Filter Out -Recurse -Force |
           # Those 'filter' file objects should be folders
           Where-Object {$_.PSIsContainer} |
                 ForEach-Object {        
