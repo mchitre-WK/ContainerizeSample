@@ -31,7 +31,7 @@ steps:
 - task: ExtractFiles@1
   inputs:
     archiveFilePatterns: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Wktaae.OrganizationManagement.Web.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/'
     cleanDestinationFolder: true
     overwriteExistingFiles: false
 
@@ -43,11 +43,11 @@ steps:
       
       Write-Host "Copy the nested publish directory contents of .net application"
       
-      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web' -Filter Out -Recurse -Force |
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish' -Filter Out -Recurse -Force |
           # Those 'filter' file objects should be folders
           Where-Object {$_.PSIsContainer} |
                 ForEach-Object {        
-                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination $(build.artifactstagingdirectory)/orgmgmt -Force -Recurse
+                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/orgmgmt' -Force -Recurse
               }
 
 - task: PublishBuildArtifacts@1
