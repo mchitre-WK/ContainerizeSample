@@ -37,10 +37,12 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/**/Out/**'
-    Contents: '**'
+    SourceFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web'
+    Contents: |
+      **/Out/**
     TargetFolder: '$(build.artifactstagingdirectory)/orgmgmt'
     CleanTargetFolder: true
+    flattenFolders: true
 
 - task: PublishBuildArtifacts@1
   inputs:
