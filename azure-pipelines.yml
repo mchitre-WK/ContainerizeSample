@@ -41,6 +41,9 @@ steps:
     script: |
       # Write your PowerShell commands here.
       
+      # Create destination folder
+      md $(build.artifactstagingdirectory)/orgmgmt
+
       Write-Host "Copy the nested publish directory contents of .net application"
       
       Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish' -Filter Out -Recurse -Force |
