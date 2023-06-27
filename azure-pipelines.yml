@@ -19,6 +19,7 @@ variables:
 
 steps:
 - task: UniversalPackages@0
+  displayName: Download application artifacts from WKTAEE repo
   inputs:
     command: 'download'
     downloadDirectory: '$(System.DefaultWorkingDirectory)'
@@ -29,6 +30,7 @@ steps:
     versionDownloadExternal: '${{ variables.packageVersion }}'
 
 - task: ExtractFiles@1
+  displayName: Extract App files/folders from zip file
   inputs:
     archiveFilePatterns: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Wktaae.OrganizationManagement.Web.zip'
     destinationFolder: '$(System.DefaultWorkingDirectory)/publish/'
@@ -36,6 +38,7 @@ steps:
     overwriteExistingFiles: false
 
 - task: PowerShell@2
+  displayName: Copy Application files
   inputs:
     targetType: 'inline'
     script: |
@@ -53,7 +56,14 @@ steps:
                   Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/orgmgmt' -Force -Recurse
               }
 
+- task: CopyFiles@2
+  displayName: Copy Dockerfile
+  inputs:
+    SourceFolder: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)'    
+
 - task: PublishBuildArtifacts@1
+  displayName: Publish App files and Dockerfile
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
