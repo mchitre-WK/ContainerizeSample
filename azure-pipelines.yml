@@ -37,7 +37,8 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    Contents: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/**/Out/**'
+    SourceFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/**/Out/**'
+    Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)/orgmgmt'
     CleanTargetFolder: true
 
