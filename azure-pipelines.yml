@@ -37,8 +37,8 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/**'
-    Contents: 'a/1/s/src/Wktaae-OrganizationManagement/Wktaae.OrganizationManagement.Web/obj/Release/net6.0/PubTmp/Out/**'
+    SourceFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/'
+    Contents: '**/Out/**'
     TargetFolder: '$(build.artifactstagingdirectory)/orgmgmt'
     CleanTargetFolder: true
 
