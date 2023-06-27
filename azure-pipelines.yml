@@ -1,0 +1,52 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: artifactsPath
+  value: European Shared Assets/WKTAAE-Build-Artifacts
+- name: packageName
+  value: wktaae-org-mgmt
+- name: packageVersion
+  value: 6.1.0
+
+steps:
+- task: UniversalPackages@0
+  inputs:
+    command: 'download'
+    downloadDirectory: '$(System.DefaultWorkingDirectory)'
+    feedsToUse: 'external'
+    externalFeedCredentials: 'wktaae-workspace-artifacts'
+    feedDownloadExternal: '${{ variables.artifactsPath }}'
+    packageDownloadExternal: '${{ variables.packageName }}'
+    versionDownloadExternal: '${{ variables.packageVersion }}'
+
+- task: ExtractFiles@1
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Wktaae.OrganizationManagement.Web.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: false
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Web/**'
+    Contents: 'a/1/s/src/Wktaae-OrganizationManagement/Wktaae.OrganizationManagement.Web/obj/Release/net6.0/PubTmp/Out/**'
+    TargetFolder: '$(build.artifactstagingdirectory)/orgmgmt'
+    CleanTargetFolder: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+
+
