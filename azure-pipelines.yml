@@ -87,7 +87,7 @@ steps:
   displayName: Push container image to Azure container registry
   inputs:
     azureSubscription: 'Azure-Workspace-Dev'
-    scriptType: 'ps'
+    scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
       az acr login --name ${{ variables.azureContainerRegistryName }}
