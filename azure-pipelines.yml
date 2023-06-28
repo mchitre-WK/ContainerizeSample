@@ -16,6 +16,11 @@ variables:
   value: wktaae-org-mgmt
 - name: packageVersion
   value: 6.1.0
+- name: imageName
+  value: org-mgmt-web
+- name: azureContainerRegistryName
+  value: devwktaasccg
+
 
 steps:
 - task: UniversalPackages@0
@@ -69,5 +74,24 @@ steps:
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
+- task: PowerShell@2
+  displayName: Build organization management web image
+  inputs:
+    workingDirectory: '$(build.artifactstagingdirectory)'
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      docker build -t ${{ variables.imageName }} .      
+
+- task: AzureCLI@2
+  displayName: Push container image to Azure container registry
+  inputs:
+    azureSubscription: 'Azure-Workspace-Dev'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login --name ${{ variables.azureContainerRegistryName }}
+      docker tag ${{ variables.imageName }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
 
 
