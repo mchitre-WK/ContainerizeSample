@@ -1,0 +1,664 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appServiceEnvironment": {
+      "type": "string"
+    },
+    "containerRegistryServer": {
+      "type": "string"
+    },
+    "containerRegistryUser": {
+      "type": "string"
+    },
+    "containerRegistrySecretName": {
+      "type": "string"
+    },
+    "containerRegistrySecretValue": {
+      "type": "string"
+    },
+    "containerName": {
+      "type": "string"
+    },
+    "containerImageName": {
+      "type": "string"
+    },
+    "containerCPU": {
+      "type": "string"
+    },
+    "containerMemory": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "object"
+    },
+    "baseUrl": {
+      "type": "string"
+    },
+    "applicationSuffix": {
+      "type": "string"
+    },
+    "enableLicensing": {
+      "type": "bool"
+    },
+    "enableMasterAdministrations": {
+      "type": "bool"
+    },
+    "enableMasterAdministrationsClientSelection": {
+      "type": "bool"
+    },
+    "enableTripleARC": {
+      "type": "bool"
+    },
+    "googleTagManagerId": {
+      "type": "string"
+    },
+    "pollingInterval": {
+      "type": "int"
+    },
+    "settingsUrl": {
+      "type": "string"
+    },
+    "showMasterAdministrationsUI": {
+      "type": "bool"
+    },
+    "vaultUri": {
+      "type": "string"
+    },
+    "ASPNETCORE_ENVIRONMENT": {
+      "type": "string",
+      "defaultValue": "Production"
+    },
+    "cdnBaseUrl": {
+      "type": "string"
+    },
+    "appName": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "clientContactApiUrl": {
+      "type": "string"
+    },
+    "clientContactHostingUrl": {
+      "type": "string"
+    },
+    "enableAdministrationContactManagement": {
+      "type": "bool"
+    },
+    "apiBaseUrl": {
+      "type": "string"
+    },
+    "appInsightsInstrumentationKey": {
+      "type": "string"
+    },
+    "invitationRedirectUrl": {
+      "type": "string"
+    },
+    "ignoreCookieConsentForLogging": {
+      "type": "bool"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "enableAdministrationCustomIdentifier": {
+      "type": "bool"
+    },
+    "enableAdministrationImport": {
+      "type": "bool"
+    },
+    "enableNewAdministrationDialog": {
+      "type": "bool"
+    },
+    "masterAdministrationsApiUrl": {
+      "type": "string"
+    },
+    "sourceCountry": {
+      "type": "string"
+    },
+    "clientContactsClientId": {
+      "type": "string"
+    },
+    "clientContactsScope": {
+      "type": "string"
+    },
+    "masterAdministrationsClientId": {
+      "type": "string"
+    },
+    "masterAdministrationsScope": {
+      "type": "string"
+    },
+    "additionalScopes": {
+      "type": "string"
+    },
+    "oauthApplicationId": {
+      "type": "string"
+    },
+    "oauthClientId": {
+      "type": "string"
+    },
+    "filterPersonalEnvironment": {
+      "type": "bool"
+    },
+    "orgSwicherUrl": {
+      "type": "string"
+    },
+    "sessionDurationInHours": {
+      "type": "int"
+    },
+    "suiteName": {
+      "type": "string"
+    },
+    "useRedisCache": {
+      "type": "bool"
+    },
+    "workspaceName": {
+      "type": "string"
+    },
+    "pendoImgSources": {
+      "type": "string"
+    },
+    "pendoScriptSources": {
+      "type": "string"
+    },
+    "pendoStyleSources": {
+      "type": "string"
+    },
+    "cookieUrl": {
+      "type": "string"
+    },
+    "privacyUrl": {
+      "type": "string"
+    },
+    "redisCacheAccountName": {
+      "type": "string"
+    },
+    "resourceGroup": {
+      "type": "string"
+    },
+    "aaaLicenseClientId": {
+      "type": "string"
+    },
+    "eLearningUrl": {
+      "type": "string"
+    },
+    "knowledgeBaseUrl": {
+      "type": "string"
+    },
+    "productManualsUrl": {
+      "type": "string"
+    },
+    "supportApiUrl": {
+      "type": "string"
+    },
+    "supportCommunityUrl": {
+      "type": "string"
+    },
+    "pandaServiceBaseUrl": {
+      "type": "string"
+    },
+    "vaultResourceGroup": {
+      "type": "string"
+    },
+    "vaultName": {
+      "type": "string"
+    },
+    "guids": {
+      "type": "object",
+      "defaultValue": {}
+    }
+  },
+  "variables": {
+    "subscriptionId": "[subscription().subscriptionId]",
+    "appServiceEnvironmentId": "[concat('/subscriptions/', variables('subscriptionId'), 'resourceGroups', resourceGroup().name,
+      'providers/Microsoft.App/managedEnvironments/', appServiceEnvironment )]",
+    "applicationLogoUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'), '/')]",
+    "applicationTitleUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'), '/')]",
+    "iconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
+    "settingsUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'), '/org/{orgId}')]",
+    "cdnIconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
+    "cdnAppUrl": "[concat('https://', parameters('cdnbaseurl'), '/', parameters('appName'), '/', parameters('version'))]",
+    "apimAppUrl": "[concat(parameters('apiBaseUrl'), '/apps/', parameters('appName'))]",
+    "gatewayPath": "[concat('/', parameters('applicationSuffix'))]",
+    "cookiePath": "[concat('/', parameters('applicationSuffix'))]",
+    "orgSwicherUrl": "[concat(parameters('baseUrl'), '/workspaceselector')]",
+    "addOrganizationUrl": "[concat(parameters('baseUrl'), '/pers')]",
+    "baseAppUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'))]",
+    "tenantId": "[subscription().tenantId]",
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
+  },
+    "resources": [
+      {
+        "apiVersion": "2022-11-01-preview",
+        "name": "[parameters('containerName')]",
+        "type": "Microsoft.App/containerapps",
+        "kind": "containerapps",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('tags')]",
+        "properties": {
+          "environmentId": "[variables('appServiceEnvironmentId')]",
+          "configuration": {
+            "secrets": {
+              "arrayValue": [
+                {
+                  "name": "[parameters('containerRegistrySecretName')]",
+                  "value": "[parameters('containerRegistrySecretValue')]"
+                }
+              ]
+            },
+            "registries": [
+              {
+                "server": "[parameters('containerRegistryServer')]",
+                "username": "[parameters('containerRegistryUser')]",
+                "passwordSecretRef": "[parameters('containerRegistrySecretName')]"
+              }
+            ],
+            "activeRevisionsMode": "Single",
+            "ingress": {
+              "value": {
+                "external": true,
+                "transport": "Auto",
+                "allowInsecure": false,
+                "targetPort": 80,
+                "stickySessions": {
+                  "affinity": "none"
+                }
+              }
+            }
+          },
+          "template": {
+            "containers": [
+              {
+                "name": "[parameters('containerName')]",
+                "image": "[parameters('containerRegistryServer']/[parameters('containerImageName']",
+                "command": [],
+                "resources": {
+                  "cpu": "[parameters('containerCPU')]",
+                  "memory": "[parameters('containerMemory')]"
+                },
+                "env": [
+                  {
+                    "name": "AppSettings__ApplicationLogoUrl",
+                    "value": "[variables('applicationLogoUrl')]"
+                  },
+                  {
+                    "name": "AppSettings__ApplicationTitleUrl",
+                    "value": "[variables('applicationTitleUrl')]"
+                  },
+                  {
+                    "name": "AppSettings__EnableLicensing",
+                    "value": "[parameters('enableLicensing')]"
+                  },
+                  {
+                    "name": "AppSettings__EnableMasterAdministrations",
+                    "value": "[parameters('enableMasterAdministrations')]"
+                  },
+                  {
+                    "name": "AppSettings__EnableMasterAdministrationsClientSelection",
+                    "value": "[parameters('enableMasterAdministrationsClientSelection')]"
+                  },
+                  {
+                    "name": "AppSettings__EnableTripleARC",
+                    "value": "[parameters('enableTripleARC')]"
+                  },
+                  {
+                    "name": "AppSettings__GoogleTagManagerId",
+                    "value": "[parameters('googleTagManagerId')]"
+                  },
+                  {
+                    "name": "AppSettings__PollingInterval",
+                    "value": "[parameters('pollingInterval')]"
+                  },
+                  {
+                    "name": "AppSettings__SettingsUrl",
+                    "value": "[variables('settingsUrl')]"
+                  },
+                  {
+                    "name": "AppSettings__ShowMasterAdministrationsUI",
+                    "value": "[parameters('showMasterAdministrationsUI')]"
+                  },
+                  {
+                    "name": "AppSettings__VaultUri",
+                    "value": "[parameters('vaultUri')]"
+                  },
+                  {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "[parameters('ASPNETCORE_ENVIRONMENT')]"
+                  },
+                  {
+                    "name": "cdn__CdnBaseUrl",
+                    "value": "[parameters('cdnBaseUrl')]"
+                  },
+                  {
+                    "name": "cdn__IconUrl",
+                    "value": "[variables('cdnIconUrl')]"
+                  },
+                  {
+                    "name": "cdn__url",
+                    "value": "[variables('cdnAppUrl')]"
+                  },
+                  {
+                    "name": "ClientContactConfiguration__ClientContactApiUrl",
+                    "value": "[parameters('clientContactApiUrl')]"
+                  },
+                  {
+                    "name": "ClientContactConfiguration__ClientContactHostingUrl",
+                    "value": "[parameters('clientContactHostingUrl')]"
+                  },
+                  {
+                    "name": "ClientContactConfiguration__EnableAdministrationContactManagement",
+                    "value": "[parameters('enableAdministrationContactManagement')]"
+                  },
+                  {
+                    "name": "ClientContactConfiguration__InvitationRedirectUrl",
+                    "value": "[parameters('invitationRedirectUrl')]"
+                  },
+                  {
+                    "name": "EnvironmentCdnSource__DefaultEnvironmentSources__0",
+                    "value": "[parameters('cdnBaseUrl')]"
+                  },
+                  {
+                    "name": "frontendConfigurations__wk-marketplace-app__ignoreCookieConsentForLogging",
+                    "value": "[parameters('ignoreCookieConsentForLogging')]"
+                  },
+                  {
+                    "name": "frontendConfigurations__wktaae-OrganizationManagement__apiUrl",
+                    "value": "[variables('apimAppUrl')]"
+                  },
+                  {
+                    "name": "frontendConfigurations__wktaae-OrganizationManagement__appInsightsInstrumentationKey",
+                    "value": "[parameters('appInsightsInstrumentationKey')]"
+                  },
+                  {
+                    "name": "Gateway__Paths__0",
+                    "value": "[variables('gatewayPath')]"
+                  },
+                  {
+                    "name": "General__Environment",
+                    "value": "[parameters('environment')]"
+                  },
+                  {
+                    "name": "MasterAdministrationConfiguration__EnableAdministrationCustomIdentifier",
+                    "value": "[parameters('enableAdministrationCustomIdentifier')]"
+                  },
+                  {
+                    "name": "MasterAdministrationConfiguration__EnableAdministrationImport",
+                    "value": "[parameters('enableAdministrationImport')]"
+                  },
+                  {
+                    "name": "MasterAdministrationConfiguration__EnableNewAdministrationDialog",
+                    "value": "[parameters('enableNewAdministrationDialog')]"
+                  },
+                  {
+                    "name": "MasterAdministrationConfiguration__MasterAdministrationsApiUrl",
+                    "value": "[parameters('masterAdministrationsApiUrl')]"
+                  },
+                  {
+                    "name": "MasterAdministrationConfiguration__SourceCountry",
+                    "value": "[parameters('sourceCountry')]"
+                  },
+                  {
+                    "name": "OAuthShellApiConfigurations__clientContacts__ClientId",
+                    "value": "[parameters('clientContactsClientId')]"
+                  },
+                  {
+                    "name": "OAuthShellApiConfigurations__clientContacts__Scope",
+                    "value": "[parameters('clientContactsScope')]"
+                  },
+                  {
+                    "name": "OAuthShellApiConfigurations__masterAdministrations__ClientId",
+                    "value": "[parameters('masterAdministrationsClientId')]"
+                  },
+                  {
+                    "name": "OAuthShellApiConfigurations__masterAdministrations__Scope",
+                    "value": "[parameters('masterAdministrationsScope')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__AdditionalScopes___0",
+                    "value": "[parameters('additionalScopes')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__apiUrl",
+                    "value": "[variables('apimAppUrl')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__ApplicationId",
+                    "value": "[parameters('oauthApplicationId')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__ClientId",
+                    "value": "[parameters('oauthClientId')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__CookiePath",
+                    "value": "[variables('cookiePath')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__EnableTripleARC",
+                    "value": "[parameters('enableTripleARC')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__Environment",
+                    "value": "[parameters('environment')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__FilterPersonalEnvironment",
+                    "value": "[parameters('filterPersonalEnvironment')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__OrgSwicherUrl",
+                    "value": "[variables('orgSwicherUrl')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__SessionDurationInHours",
+                    "value": "[parameters('sessionDurationInHours')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__SuiteName",
+                    "value": "[parameters('suiteName')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__UseRedisCache",
+                    "value": "[parameters('useRedisCache')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__WorkspaceBaseUrl",
+                    "value": "[parameters('baseUrl')]"
+                  },
+                  {
+                    "name": "OAuthShellTripleAConfiguration__WorkspaceName",
+                    "value": "[parameters('workspaceName')]"
+                  },
+                  {
+                    "name": "OrganizationConfiguration__AddOrganizationUrl",
+                    "value": "[variables('addOrganizationUrl')]"
+                  },
+                  {
+                    "name": "OrganizationConfiguration__BaseUrl",
+                    "value": "[variables('baseAppUrl')]"
+                  },
+                  {
+                    "name": "PendoCustomSourceConfiguration__ImgSources",
+                    "value": "[parameters('pendoImgSources')]"
+                  },
+                  {
+                    "name": "PendoCustomSourceConfiguration__ScriptSources",
+                    "value": "[parameters('pendoScriptSources')]"
+                  },
+                  {
+                    "name": "PendoCustomSourceConfiguration__StyleSources",
+                    "value": "[parameters('pendoStyleSources')]"
+                  },
+                  {
+                    "name": "PrivacyCookieLinks__CookieUrl",
+                    "value": "[parameters('cookieUrl')]"
+                  },
+                  {
+                    "name": "PrivacyCookieLinks__PrivacyUrl",
+                    "value": "[parameters('privacyUrl')]"
+                  },
+                  {
+                    "name": "RedisConfigurationSettings__AccountName",
+                    "value": "[parameters('redisCacheAccountName')]"
+                  },
+                  {
+                    "name": "RedisConfigurationSettings__ResourceGroupName",
+                    "value": "[parameters('resourceGroup')]"
+                  },
+                  {
+                    "name": "RedisConfigurationSettings__SubscriptionId",
+                    "value": "[variables('subscriptionId')]"
+                  },
+                  {
+                    "name": "RedisConfigurationSettings__TenantId",
+                    "value": "[variables('tenantId')]"
+                  },
+                  {
+                    "name": "ShellLicenseClient__AAALicenseClientId",
+                    "value": "[parameters('aaaLicenseClientId')]"
+                  },
+                  {
+                    "name": "SupportLinks__ELearningUrl",
+                    "value": "[parameters('eLearningUrl')]"
+                  },
+                  {
+                    "name": "SupportLinks__KnowledgeBaseUrl",
+                    "value": "[parameters('knowledgeBaseUrl')]"
+                  },
+                  {
+                    "name": "SupportLinks__ProductManualsUrl",
+                    "value": "[parameters('productManualsUrl')]"
+                  },
+                  {
+                    "name": "SupportLinks__SupportApiUrl",
+                    "value": "[parameters('supportApiUrl')]"
+                  },
+                  {
+                    "name": "SupportLinks__SupportCommunityUrl",
+                    "value": "[parameters('supportCommunityUrl')]"
+                  },
+                  {
+                    "name": "ApplicationInsights__InstrumentationKey",
+                    "value": "[parameters('appInsightsInstrumentationKey')]"
+                  },
+                  {
+                    "name": "PandaService__BaseUrl",
+                    "value": "[parameters('pandaServiceBaseUrl')]"
+                  }
+                ]
+              }
+            ],
+            "scale": {
+              "minReplicas": 0
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "enableVaultSecurity",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[parameters('vaultResourceGroup')]",
+        "dependsOn": [
+          "[resourceId('Microsoft.App/containerapps', parameters('containerName'))]"
+        ],
+        "properties": {
+          "mode": "Incremental",
+          "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "resources": [
+              {
+                "type": "Microsoft.KeyVault/vaults/accessPolicies",
+                "name": "[concat(parameters('vaultName'), '/add')]",
+                "apiVersion": "2018-02-14",
+                "properties": {
+                  "accessPolicies": [
+                    { //Container app
+                      "tenantId": "[reference(variables('appIdentityResourceId'), '2016-08-01', 'Full').identity.tenantId]",
+                      "objectId": "[reference(variables('appIdentityResourceId'), '2016-08-01', 'Full').identity.principalId]",
+                      "permissions": {
+                        "keys": [
+                          "UnwrapKey",
+                          "WrapKey"
+                        ],
+                        "secrets": [
+                          "Get",
+                          "List"
+                        ],
+                        "certificates": [
+                          "Get",
+                          "List",
+                          "ListIssuers"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name": "setupRoleAssignments",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[resourceGroup().name]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/sites', parameters('containerName'))]",
+          "[variables('appIdentityResourceId')]"
+        ],
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "webAppIdentityResourceId": {
+              "value": "[variables('appIdentityResourceId')]"
+            },
+            "guids": {
+              "value": "[parameters('guids')]"
+            },
+            "redisCacheAccountName": {
+              "value": "[parameters('redisCacheAccountName')]"
+            }
+          },
+          "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+              "webAppIdentityResourceId": {
+                "type": "string"
+              },
+              "guids": {
+                "type": "object",
+                "defaultValue": {}
+              },
+              "redisCacheAccountName": {
+                "type": "string"
+              }
+            },
+            "variables": {
+              "redisaccount": "[parameters('redisCacheAccountName')]",
+              "redisContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'e0f68234-74aa-48ed-b826-c38b57376e17')]"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Cache/Redis/providers/roleAssignments",
+                "apiVersion": "2018-09-01-preview",
+                "name": "[concat(variables('redisaccount'), '/Microsoft.Authorization/', parameters('guids').redis)]",
+                "properties": {
+                  "roleDefinitionId": "[variables('redisContributor')]",
+                  "principalId": "[reference(parameters('webAppIdentityResourceId'), '2016-08-01', 'Full').identity.principalId]",
+                  "principalType": "ServicePrincipal"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+}
