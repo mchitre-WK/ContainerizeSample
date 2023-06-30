@@ -1,0 +1,97 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: artifactsPath
+  value: European Shared Assets/WKTAAE-Build-Artifacts
+- name: packageName
+  value: wktaae-org-mgmt
+- name: packageVersion
+  value: 6.1.0
+- name: imageName
+  value: org-mgmt-web
+- name: azureContainerRegistryName
+  value: devwktaasccg
+
+
+steps:
+- task: UniversalPackages@0
+  displayName: Download application artifacts from WKTAEE repo
+  inputs:
+    command: 'download'
+    downloadDirectory: '$(System.DefaultWorkingDirectory)'
+    feedsToUse: 'external'
+    externalFeedCredentials: 'wktaae-workspace-artifacts'
+    feedDownloadExternal: '${{ variables.artifactsPath }}'
+    packageDownloadExternal: '${{ variables.packageName }}'
+    versionDownloadExternal: '${{ variables.packageVersion }}'
+
+- task: ExtractFiles@1
+  displayName: Extract App files/folders from zip file
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Wktaae.OrganizationManagement.Web.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: false
+
+- task: PowerShell@2
+  displayName: Copy Application files
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # Create destination folder
+      md $(build.artifactstagingdirectory)/orgmgmt
+
+      Write-Host "Copy the nested publish directory contents of .net application"
+      
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish' -Filter Out -Recurse -Force |
+          # Those 'filter' file objects should be folders
+          Where-Object {$_.PSIsContainer} |
+                ForEach-Object {        
+                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/orgmgmt' -Force -Recurse
+              }
+
+- task: CopyFiles@2
+  displayName: Copy Dockerfile
+  inputs:
+    Contents: 'Dockerfile'
+    TargetFolder: '$(build.artifactstagingdirectory)'    
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish App files and Dockerfile
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PowerShell@2
+  displayName: Build organization management web image
+  inputs:
+    workingDirectory: '$(build.artifactstagingdirectory)'
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      docker build -t ${{ variables.imageName }} .      
+
+- task: AzureCLI@2
+  displayName: Push container image to Azure container registry
+  inputs:
+    azureSubscription: 'Azure-Workspace-Dev'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login --name ${{ variables.azureContainerRegistryName }}
+      docker tag ${{ variables.imageName }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
+
+
