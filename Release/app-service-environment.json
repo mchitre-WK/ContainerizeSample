@@ -1,0 +1,33 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {   
+    "appServiceEnvironmentName": {
+      "type": "string"
+    },
+    "logAnalysticsWorkspaceName": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "object"
+    }
+  },
+    "resources": [
+      {
+        "apiVersion": "2022-11-01-preview",
+        "name": "[parameters('appServiceEnvironmentName')]",
+        "type": "Microsoft.App/managedEnvironments",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('tags')]",
+        "properties": {
+          "appLogsConfiguration": {
+            "destination": "log-analytics",
+            "logAnalyticsConfiguration": {
+              "customerId": "[reference(concat('Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').customerId]",
+              "sharedKey": "[listKeys(concat('Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').primarySharedKey]"
+            }
+          }
+        }
+      }      
+    ]
+}
