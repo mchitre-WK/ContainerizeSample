@@ -207,6 +207,9 @@
     "guids": {
       "type": "object",
       "defaultValue": {}
+    },
+    "applicationTitleUrl": {
+      "type": "string"
     }
   },
   "variables": {
@@ -214,7 +217,6 @@
     "subscriptionId": "[subscription().subscriptionId]",
     "appServiceEnvironmentId": "[concat('/subscriptions/', variables('subscriptionId'), 'resourceGroups', resourceGroup().name, 'providers/Microsoft.App/managedEnvironments/', appServiceEnvironmentName )]",
     "applicationLogoUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/')]",
-    "applicationTitleUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/')]",
     "iconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
     "settingsUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/org/{orgId}')]",
     "cdnIconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
@@ -284,7 +286,7 @@
                 },
                 {
                   "name": "AppSettings__ApplicationTitleUrl",
-                  "value": "[variables('applicationTitleUrl')]"
+                  "value": "[parameters('applicationTitleUrl')]"
                 },
                 {
                   "name": "AppSettings__EnableLicensing",
