@@ -19,7 +19,7 @@ variables:
 - name: imageName
   value: org-mgmt-web
 - name: azureContainerRegistryName
-  value: devwktaasccg
+  value: devwktaasc
 
 
 steps:
@@ -64,7 +64,10 @@ steps:
 - task: CopyFiles@2
   displayName: Copy build and release files
   inputs:
-    Contents: '**'
+    Contents: |
+      Dockerfile
+      Build/**
+      Release/**
     TargetFolder: '$(build.artifactstagingdirectory)'
 
 - task: PublishBuildArtifacts@1
