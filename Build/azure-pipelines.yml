@@ -92,8 +92,8 @@ steps:
   displayName: Copy Cdn, Swagger, Build and release files 
   inputs:
     Contents: |
-      '$(System.DefaultWorkingDirectory)/_Organization Management/drop/cdnContent/**'
-      '$(System.DefaultWorkingDirectory)/_Organization Management/drop/swagger.json'
+      $(System.DefaultWorkingDirectory)/_Organization Management/drop/cdnContent/**
+      $(System.DefaultWorkingDirectory)/_Organization Management/drop/swagger.json
       Release/**
     TargetFolder: '$(build.artifactstagingdirectory)'
 
