@@ -215,7 +215,7 @@
   "variables": {
     "appInsightsInstrumentationKey": "[reference(resourceId(parameters('coreResourceGroup'), 'Microsoft.Insights/components', concat(parameters('coreResourceGroup'), '-ai')), '2014-04-01').InstrumentationKey]",
     "subscriptionId": "[subscription().subscriptionId]",
-    "appServiceEnvironmentId": "[concat('/subscriptions/', variables('subscriptionId'), 'resourceGroups', resourceGroup().name, 'providers/Microsoft.App/managedEnvironments/', appServiceEnvironmentName )]",
+    "appServiceEnvironmentId": "[concat('/subscriptions/', variables('subscriptionId'), 'resourceGroups', resourceGroup().name, 'providers/Microsoft.App/managedEnvironments/', parameters('appServiceEnvironmentName'))]",
     "applicationLogoUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/')]",
     "iconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
     "settingsUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/org/{orgId}')]",
