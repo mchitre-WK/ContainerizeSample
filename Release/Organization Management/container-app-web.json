@@ -2,7 +2,7 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "appServiceEnvironment": {
+    "appServiceEnvironmentName": {
       "type": "string"
     },
     "containerRegistryServer": {
@@ -32,7 +32,7 @@
     "tags": {
       "type": "object"
     },
-    "baseUrl": {
+    "WorkspaceBaseUrl": {
       "type": "string"
     },
     "applicationSuffix": {
@@ -87,10 +87,10 @@
     "enableAdministrationContactManagement": {
       "type": "bool"
     },
-    "apiBaseUrl": {
+    "apiDNS": {
       "type": "string"
     },
-    "appInsightsInstrumentationKey": {
+    "coreResourceGroup": {
       "type": "string"
     },
     "invitationRedirectUrl": {
@@ -114,7 +114,7 @@
     "masterAdministrationsApiUrl": {
       "type": "string"
     },
-    "sourceCountry": {
+    "masterAdministrationSourceCountry": {
       "type": "string"
     },
     "clientContactsClientId": {
@@ -123,19 +123,19 @@
     "clientContactsScope": {
       "type": "string"
     },
-    "masterAdministrationsClientId": {
+    "oAuthShellApiConfigurationsMasterAdministrationClientid": {
       "type": "string"
     },
-    "masterAdministrationsScope": {
+    "oAuthShellApiConfigurationsMasterAdministrationScope": {
       "type": "string"
     },
-    "additionalScopes": {
+    "apiOAuthConfigurationDefaultScope": {
       "type": "string"
     },
-    "oauthApplicationId": {
+    "oauthshelltripleaconfigurationApplicationid": {
       "type": "string"
     },
-    "oauthClientId": {
+    "oauthshelltripleaconfigurationClientid": {
       "type": "string"
     },
     "filterPersonalEnvironment": {
@@ -150,7 +150,7 @@
     "suiteName": {
       "type": "string"
     },
-    "useRedisCache": {
+    "oAuthShellApiConfigurationsUseRedisCache": {
       "type": "bool"
     },
     "workspaceName": {
@@ -180,22 +180,22 @@
     "aaaLicenseClientId": {
       "type": "string"
     },
-    "eLearningUrl": {
+    "SupportLinksELearningUrl": {
       "type": "string"
     },
-    "knowledgeBaseUrl": {
+    "SupportLinksKnowledgeBaseUrl": {
       "type": "string"
     },
-    "productManualsUrl": {
+    "SupportLinksProductManualsUrl": {
       "type": "string"
     },
-    "supportApiUrl": {
+    "SupportLinksSupportApiUrl": {
       "type": "string"
     },
-    "supportCommunityUrl": {
+    "SupportLinksSupportCommunityUrl": {
       "type": "string"
     },
-    "pandaServiceBaseUrl": {
+    "PandaServiceBaseUrl": {
       "type": "string"
     },
     "vaultResourceGroup": {
@@ -210,23 +210,24 @@
     }
   },
   "variables": {
+    "appInsightsInstrumentationKey": "[reference(resourceId(parameters('coreResourceGroup'), 'Microsoft.Insights/components', concat(parameters('coreResourceGroup'), '-ai')), '2014-04-01').InstrumentationKey]",
     "subscriptionId": "[subscription().subscriptionId]",
     "appServiceEnvironmentId": "[concat('/subscriptions/', variables('subscriptionId'), 'resourceGroups', resourceGroup().name,
-      'providers/Microsoft.App/managedEnvironments/', appServiceEnvironment )]",
-    "applicationLogoUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'), '/')]",
-    "applicationTitleUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'), '/')]",
+      'providers/Microsoft.App/managedEnvironments/', appServiceEnvironmentName )]",
+    "applicationLogoUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/')]",
+    "applicationTitleUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/')]",
     "iconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
-    "settingsUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'), '/org/{orgId}')]",
+    "settingsUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/org/{orgId}')]",
     "cdnIconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
-    "cdnAppUrl": "[concat('https://', parameters('cdnbaseurl'), '/', parameters('appName'), '/', parameters('version'))]",
-    "apimAppUrl": "[concat(parameters('apiBaseUrl'), '/apps/', parameters('appName'))]",
+    "cdnAppUrl": "[concat(parameters('cdnbaseurl'), '/', parameters('appName'), '/', parameters('version'))]",
+    "apimAppUrl": "[concat('https://', parameters('apiDNS'), '/apps/', parameters('appName'))]",
     "gatewayPath": "[concat('/', parameters('applicationSuffix'))]",
     "cookiePath": "[concat('/', parameters('applicationSuffix'))]",
-    "orgSwicherUrl": "[concat(parameters('baseUrl'), '/workspaceselector')]",
-    "addOrganizationUrl": "[concat(parameters('baseUrl'), '/pers')]",
-    "baseAppUrl": "[concat(parameters('baseUrl'), '/', parameters('applicationSuffix'))]",
+    "orgSwicherUrl": "[concat(parameters('WorkspaceBaseUrl'), '/workspaceselector')]",
+    "addOrganizationUrl": "[concat(parameters('WorkspaceBaseUrl'), '/pers')]",
+    "baseAppUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'))]",
     "tenantId": "[subscription().tenantId]",
-    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]"
   },
     "resources": [
       {
@@ -368,7 +369,7 @@
                   },
                   {
                     "name": "frontendConfigurations__wktaae-OrganizationManagement__appInsightsInstrumentationKey",
-                    "value": "[parameters('appInsightsInstrumentationKey')]"
+                    "value": "[variables('appInsightsInstrumentationKey')]"
                   },
                   {
                     "name": "Gateway__Paths__0",
@@ -396,7 +397,7 @@
                   },
                   {
                     "name": "MasterAdministrationConfiguration__SourceCountry",
-                    "value": "[parameters('sourceCountry')]"
+                    "value": "[parameters('masterAdministrationSourceCountry')]"
                   },
                   {
                     "name": "OAuthShellApiConfigurations__clientContacts__ClientId",
@@ -408,15 +409,15 @@
                   },
                   {
                     "name": "OAuthShellApiConfigurations__masterAdministrations__ClientId",
-                    "value": "[parameters('masterAdministrationsClientId')]"
+                    "value": "[parameters('oAuthShellApiConfigurationsMasterAdministrationClientid')]"
                   },
                   {
                     "name": "OAuthShellApiConfigurations__masterAdministrations__Scope",
-                    "value": "[parameters('masterAdministrationsScope')]"
+                    "value": "[parameters('oAuthShellApiConfigurationsMasterAdministrationScope')]"
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__AdditionalScopes___0",
-                    "value": "[parameters('additionalScopes')]"
+                    "value": "[parameters('apiOAuthConfigurationDefaultScope')]"
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__apiUrl",
@@ -424,11 +425,11 @@
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__ApplicationId",
-                    "value": "[parameters('oauthApplicationId')]"
+                    "value": "[parameters('oauthshelltripleaconfigurationApplicationid')]"
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__ClientId",
-                    "value": "[parameters('oauthClientId')]"
+                    "value": "[parameters('oauthshelltripleaconfigurationClientid')]"
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__CookiePath",
@@ -460,11 +461,11 @@
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__UseRedisCache",
-                    "value": "[parameters('useRedisCache')]"
+                    "value": "[parameters('oAuthShellApiConfigurationsUseRedisCache')]"
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__WorkspaceBaseUrl",
-                    "value": "[parameters('baseUrl')]"
+                    "value": "[parameters('WorkspaceBaseUrl')]"
                   },
                   {
                     "name": "OAuthShellTripleAConfiguration__WorkspaceName",
@@ -520,31 +521,31 @@
                   },
                   {
                     "name": "SupportLinks__ELearningUrl",
-                    "value": "[parameters('eLearningUrl')]"
+                    "value": "[parameters('SupportLinksELearningUrl')]"
                   },
                   {
                     "name": "SupportLinks__KnowledgeBaseUrl",
-                    "value": "[parameters('knowledgeBaseUrl')]"
+                    "value": "[parameters('SupportLinksKnowledgeBaseUrl')]"
                   },
                   {
                     "name": "SupportLinks__ProductManualsUrl",
-                    "value": "[parameters('productManualsUrl')]"
+                    "value": "[parameters('SupportLinksProductManualsUrl')]"
                   },
                   {
                     "name": "SupportLinks__SupportApiUrl",
-                    "value": "[parameters('supportApiUrl')]"
+                    "value": "[parameters('SupportLinksSupportApiUrl')]"
                   },
                   {
                     "name": "SupportLinks__SupportCommunityUrl",
-                    "value": "[parameters('supportCommunityUrl')]"
+                    "value": "[parameters('SupportLinksSupportCommunityUrl')]"
                   },
                   {
                     "name": "ApplicationInsights__InstrumentationKey",
-                    "value": "[parameters('appInsightsInstrumentationKey')]"
+                    "value": "[variables('appInsightsInstrumentationKey')]"
                   },
                   {
                     "name": "PandaService__BaseUrl",
-                    "value": "[parameters('pandaServiceBaseUrl')]"
+                    "value": "[parameters('PandaServiceBaseUrl')]"
                   }
                 ]
               }
