@@ -35,7 +35,7 @@ steps:
     versionDownloadExternal: '${{ variables.packageVersion }}'
 
 - task: ExtractFiles@1
-  displayName: Extract App files/folders from zip file
+  displayName: Extract web app files/folders from zip file
   inputs:
     archiveFilePatterns: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Wktaae.OrganizationManagement.Web.zip'
     destinationFolder: '$(System.DefaultWorkingDirectory)/publish/'
@@ -66,16 +66,7 @@ steps:
   inputs:
     Contents: |
       Dockerfile
-      Build/**
-      Release/**
     TargetFolder: '$(build.artifactstagingdirectory)'
-
-- task: PublishBuildArtifacts@1
-  displayName: Publish App files and Dockerfile
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
 
 - task: PowerShell@2
   displayName: Build organization management web image
@@ -97,4 +88,20 @@ steps:
       docker tag ${{ variables.imageName }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
       docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
 
+- task: CopyFiles@2
+  displayName: Copy Cdn, Swagger, Build and release files 
+  inputs:
+    Contents: |
+      '$(System.DefaultWorkingDirectory)/_Organization Management/drop/cdnContent/**'
+      '$(System.DefaultWorkingDirectory)/_Organization Management/drop/swagger.json'
+      Release/**
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    flattenFolders: true
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish application files for release
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
 
