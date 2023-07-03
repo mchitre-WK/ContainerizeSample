@@ -89,6 +89,9 @@
     "apiDNS": {
       "value": "dev-wktaasc-api-workspace.azure-api.net"
     },
+    "coreResourceGroup": {
+      "value": "dev-wktaasc-core"
+    },
     "invitationRedirectUrl": {
       "value": "https://dev.workspace.capego.net/workspaceselector/"
     },
