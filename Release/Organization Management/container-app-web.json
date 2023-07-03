@@ -145,7 +145,7 @@
       "type": "string"
     },
     "sessionDurationInHours": {
-      "type": "int"
+      "type": "string"
     },
     "suiteName": {
       "type": "string"
