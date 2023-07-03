@@ -54,7 +54,7 @@
       "value": "0000"
     },
     "pollingInterval": {
-      "value": "1000"
+      "value": 1000
     },
     "settingsUrl": {
       "value": "https://dev.workspace.capego.net/orgmgmt/org/{orgId}"
