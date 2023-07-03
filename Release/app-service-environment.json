@@ -10,6 +10,9 @@
     },
     "tags": {
       "type": "object"
+    },
+    "coreResourceGroup": {
+      "type": "string"
     }
   },
     "resources": [
@@ -23,8 +26,8 @@
           "appLogsConfiguration": {
             "destination": "log-analytics",
             "logAnalyticsConfiguration": {
-              "customerId": "[reference(concat('Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').customerId]",
-              "sharedKey": "[listKeys(concat('Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').primarySharedKey]"
+              "customerId": "[reference(concat(parameters('coreResourceGroup'), 'Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').customerId]",
+              "sharedKey": "[listKeys(concat(parameters('coreResourceGroup'), 'Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').primarySharedKey]"
             }
           }
         }
