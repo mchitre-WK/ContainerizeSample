@@ -39,16 +39,16 @@
       "value": "orgmgmt"
     },
     "enableLicensing": {
-      "value": "True"
+      "value": true
     },
     "enableMasterAdministrations": {
-      "value": "True"
+      "value": true
     },
     "enableMasterAdministrationsClientSelection": {
-      "value": "False"
+      "value": false
     },
     "enableTripleARC": {
-      "value": "True"
+      "value": true
     },
     "googleTagManagerId": {
       "value": "0000"
@@ -60,7 +60,7 @@
       "value": "https://dev.workspace.capego.net/orgmgmt/org/{orgId}"
     },
     "showMasterAdministrationsUI": {
-      "value": "False"
+      "value": false
     },
     "vaultUri": {
       "value": "https://dev-sc-vault-org-mgmt.vault.azure.net/"
@@ -84,7 +84,7 @@
       "value": "https://dev.workspace.capego.net/orgmgmt/"
     },
     "enableAdministrationContactManagement": {
-      "value": "True"
+      "value": true
     },
     "apiDNS": {
       "value": "dev-wktaasc-api-workspace.azure-api.net"
@@ -93,19 +93,19 @@
       "value": "https://dev.workspace.capego.net/workspaceselector/"
     },
     "ignoreCookieConsentForLogging": {
-      "value": "True"
+      "value": true
     },
     "environment": {
       "value": "dev"
     },
     "enableAdministrationCustomIdentifier": {
-      "value": "True"
+      "value": true
     },
     "enableAdministrationImport": {
-      "value": "True"
+      "value": true
     },
     "enableNewAdministrationDialog": {
-      "value": "True"
+      "value": true
     },
     "masterAdministrationsApiUrl": {
       "value": "https://dev-api.cloud-dev.wolterskluwer.eu/masteradministration/v1/"
@@ -135,7 +135,7 @@
       "value": "WKTAA.SC.OrganizationManagement.Dev"
     },
     "filterPersonalEnvironment": {
-      "value": "True"
+      "value": true
     },
     "orgSwicherUrl": {
       "value": "https://dev.workspace.capego.net/workspaceselector"
@@ -147,7 +147,7 @@
       "value": "Scandinavia Portal"
     },
     "oAuthShellApiConfigurationsUseRedisCache": {
-      "value": "True"
+      "value": true
     },
     "workspaceName": {
       "value": "Scandinavia Cloud"
