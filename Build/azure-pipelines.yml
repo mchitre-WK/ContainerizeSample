@@ -64,20 +64,9 @@ steps:
 - task: CopyFiles@2
   displayName: Copy Dockerfile
   inputs:
-    Contents: 'Build/Dockerfile'
-    TargetFolder: '$(build.artifactstagingdirectory)'    
-
-- task: CopyFiles@2
-  displayName: Copy Build files
-  inputs:
-    Contents: 'Build/azure-pipelines.yml'
-    TargetFolder: '$(build.artifactstagingdirectory)/build'
-
-- task: CopyFiles@2
-  displayName: Copy Release files
-  inputs:
-    Contents: 'Release/**'
-    TargetFolder: '$(build.artifactstagingdirectory)/release'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    flattenFolder: true
 
 - task: PublishBuildArtifacts@1
   displayName: Publish App files and Dockerfile
