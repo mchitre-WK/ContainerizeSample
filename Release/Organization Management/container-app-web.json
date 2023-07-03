@@ -601,65 +601,6 @@
             ]
           }
         }
-      },
-      {
-        "apiVersion": "2017-05-10",
-        "name": "setupRoleAssignments",
-        "type": "Microsoft.Resources/deployments",
-        "resourceGroup": "[resourceGroup().name]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/sites', parameters('containerName'))]",
-          "[variables('appIdentityResourceId')]"
-        ],
-        "properties": {
-          "expressionEvaluationOptions": {
-            "scope": "inner"
-          },
-          "mode": "Incremental",
-          "parameters": {
-            "webAppIdentityResourceId": {
-              "value": "[variables('appIdentityResourceId')]"
-            },
-            "guids": {
-              "value": "[parameters('guids')]"
-            },
-            "redisCacheAccountName": {
-              "value": "[parameters('redisCacheAccountName')]"
-            }
-          },
-          "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
-            "contentVersion": "1.0.0.0",
-            "parameters": {
-              "webAppIdentityResourceId": {
-                "type": "string"
-              },
-              "guids": {
-                "type": "object",
-                "defaultValue": {}
-              },
-              "redisCacheAccountName": {
-                "type": "string"
-              }
-            },
-            "variables": {
-              "redisaccount": "[parameters('redisCacheAccountName')]",
-              "redisContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'e0f68234-74aa-48ed-b826-c38b57376e17')]"
-            },
-            "resources": [
-              {
-                "type": "Microsoft.Cache/Redis/providers/roleAssignments",
-                "apiVersion": "2018-09-01-preview",
-                "name": "[concat(variables('redisaccount'), '/Microsoft.Authorization/', parameters('guids').redis)]",
-                "properties": {
-                  "roleDefinitionId": "[variables('redisContributor')]",
-                  "principalId": "[reference(parameters('webAppIdentityResourceId'), '2016-08-01', 'Full').identity.principalId]",
-                  "principalType": "ServicePrincipal"
-                }
-              }
-            ]
-          }
-        }
       }
     ]
 }
