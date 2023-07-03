@@ -62,11 +62,11 @@ steps:
               }
 
 - task: CopyFiles@2
-  displayName: Copy Dockerfile
+  displayName: Copy build and release files
   inputs:
     Contents: '**'
     TargetFolder: '$(build.artifactstagingdirectory)'
-    flattenFolder: true
+    flattenFolders: true
 
 - task: PublishBuildArtifacts@1
   displayName: Publish App files and Dockerfile
