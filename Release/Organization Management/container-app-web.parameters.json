@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
-    "appServiceEnvironment": {
+    "appServiceEnvironmentName": {
       "value": "dev-wktaasc-org-mgmt-container-env"
     },
     "containerRegistryServer": {
@@ -32,7 +32,7 @@
     "tags": {
       "value": {}
     },
-    "baseUrl": {
+    "WorkspaceBaseUrl": {
       "value": "https://dev.workspace.capego.net"
     },
     "applicationSuffix": {
@@ -86,11 +86,8 @@
     "enableAdministrationContactManagement": {
       "value": "True"
     },
-    "apiBaseUrl": {
-      "value": "https://dev-wktaasc-api-workspace.azure-api.net"
-    },
-    "appInsightsInstrumentationKey": {
-      "value": "d41d7c6a-aded-492b-9d26-9e994365a67f"
+    "apiDNS": {
+      "value": "dev-wktaasc-api-workspace.azure-api.net"
     },
     "invitationRedirectUrl": {
       "value": "https://dev.workspace.capego.net/workspaceselector/"
@@ -113,7 +110,7 @@
     "masterAdministrationsApiUrl": {
       "value": "https://dev-api.cloud-dev.wolterskluwer.eu/masteradministration/v1/"
     },
-    "sourceCountry": {
+    "masterAdministrationSourceCountry": {
       "value": "GB"
     },
     "clientContactsClientId": {
@@ -122,19 +119,19 @@
     "clientContactsScope": {
       "value": "WK.BE.Administrations WKTAAE.CSO.ClientContact"
     },
-    "masterAdministrationsClientId": {
+    "oAuthShellApiConfigurationsMasterAdministrationClientid": {
       "value": "WKTAA.SC.MasterAdministration.API"
     },
-    "masterAdministrationsScope": {
+    "oAuthShellApiConfigurationsMasterAdministrationScope": {
       "value": "WK.BE.INT.MasterAdministrations.Provisioning"
     },
-    "additionalScopes": {
+    "apiOAuthConfigurationDefaultScope": {
       "value": "WKTAA.SC.OrganizationManagement"
     },
-    "oauthApplicationId": {
+    "oauthshelltripleaconfigurationApplicationid": {
       "value": "b248269c-0b48-4f5f-8e9c-af9b0062c778"
     },
-    "oauthClientId": {
+    "oauthshelltripleaconfigurationClientid": {
       "value": "WKTAA.SC.OrganizationManagement.Dev"
     },
     "filterPersonalEnvironment": {
@@ -149,7 +146,7 @@
     "suiteName": {
       "value": "Scandinavia Portal"
     },
-    "useRedisCache": {
+    "oAuthShellApiConfigurationsUseRedisCache": {
       "value": "True"
     },
     "workspaceName": {
@@ -170,7 +167,7 @@
     "privacyUrl": {
       "value": "https://www.wolterskluwer.be/corporate"
     },
-    "redisAccountName": {
+    "redisCacheAccountName": {
       "value": "dev-wktaasc-redis-org-mgmt"
     },
     "resourceGroup": {
@@ -179,23 +176,34 @@
     "aaaLicenseClientId": {
       "value": "WKTAAE.CSO.DEV"
     },
-    "eLearningUrl": {
+    "SupportLinksELearningUrl": {
       "value": "https://mylearningportal.wolterskluwer.co.uk/"
     },
-    "knowledgeBaseUrl": {
+    "SupportLinksKnowledgeBaseUrl": {
       "value": "https://help.wolterskluwer.co.uk/Customers/s/global-search/%40uri#q=%20&amp;t=Knowledge&amp;sort=relevancy"
     },
-    "productManualsUrl": {
+    "SupportLinksProductManualsUrl": {
       "value": "https://userdocs.wolterskluwer.co.uk/Product_Information"
     },
-    "supportApiUrl": {
+    "SupportLinksSupportApiUrl": {
       "value": "https://dev-api.cloud-dev.wolterskluwer.eu/apps/dev-supportapi/opencases"
     },
-    "supportCommunityUrl": {
+    "SupportLinksSupportCommunityUrl": {
       "value": "https://help.wolterskluwer.co.uk/Customers/s/"
     },
-    "pandaServiceBaseUrl": {
+    "PandaServiceBaseUrl": {
       "value": "https://dev-api.cloud-dev.wolterskluwer.eu/apps/dev-supportapi/"
+    },
+    "vaultResourceGroup": {
+      "value": "dev-org-mgmt"
+    },
+    "vaultName": {
+      "value": "dev-org-mgmt-kv"
+    },
+    "guids": {
+      "value": {
+        "redis": "ef4d620b-a210-4971-b371-5a4a4a3e9fb3"
+      }
     }
   }
 }
