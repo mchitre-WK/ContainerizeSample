@@ -26,8 +26,8 @@
           "appLogsConfiguration": {
             "destination": "log-analytics",
             "logAnalyticsConfiguration": {
-              "customerId": "[reference(concat(parameters('coreResourceGroup'), '/Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').customerId]",
-              "sharedKey": "[listKeys(concat(parameters('coreResourceGroup'), '/Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').primarySharedKey]"
+              "customerId": "[reference(resourceId(parameters('coreResourceGroup'), 'Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').customerId]",
+              "sharedKey": "[listKeys(resourceId(parameters('coreResourceGroup'), 'Microsoft.OperationalInsights/workspaces/', parameters('logAnalysticsWorkspaceName')), '2020-08-01').primarySharedKey]"
             }
           }
         }
