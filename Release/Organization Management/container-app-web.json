@@ -657,5 +657,11 @@
         }
       }
     }
-  ]
+  ],
+   "outputs": {
+    "webContainerFQDN": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).dnsSettings.fqdn]"
+    }
+  }
 }
