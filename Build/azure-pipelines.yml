@@ -16,11 +16,16 @@ variables:
   value: wktaae-org-mgmt
 - name: packageVersion
   value: 6.1.0
-- name: imageName
+- name: webImageName
   value: org-mgmt-web
+- name: apiImageName
+  value: org-mgmt-api
 - name: azureContainerRegistryName
   value: devwktaasc
-
+- name: webDockerFile
+  value: Dockerfile-web
+- name: apiDockerFile
+  value: Dockerfile-api
 
 steps:
 - task: UniversalPackages@0
@@ -37,63 +42,117 @@ steps:
 - task: ExtractFiles@1
   displayName: Extract web app files/folders from zip file
   inputs:
-    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/_Organization Management/drop/Wktaae.OrganizationManagement.Web.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/'
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Web.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/web'
     cleanDestinationFolder: true
     overwriteExistingFiles: false
 
 - task: PowerShell@2
-  displayName: Copy Application files
+  displayName: Copy web Application files
   inputs:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
       
       # Create destination folder
-      md $(build.artifactstagingdirectory)/orgmgmt
+      md $(build.artifactstagingdirectory)/webapp/files
 
       Write-Host "Copy the nested publish directory contents of .net application"
       
-      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish' -Filter Out -Recurse -Force |
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/web' -Filter Out -Recurse -Force |
           # Those 'filter' file objects should be folders
           Where-Object {$_.PSIsContainer} |
                 ForEach-Object {        
-                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/orgmgmt' -Force -Recurse
+                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapp/files' -Force -Recurse
               }
 
 - task: CopyFiles@2
-  displayName: Copy build and release files
+  displayName: Copy web application docker file
   inputs:
     Contents: |
-      Dockerfile
-    TargetFolder: '$(build.artifactstagingdirectory)'
+      ${{ variables.webDockerFile }}
+    TargetFolder: '$(build.artifactstagingdirectory)/webapp'
 
 - task: PowerShell@2
-  displayName: Build organization management web image
+  displayName: Build web application image
   inputs:
-    workingDirectory: '$(build.artifactstagingdirectory)'
+    workingDirectory: '$(build.artifactstagingdirectory)/webapp'
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      docker build -t ${{ variables.imageName }} .      
+      docker build -t ${{ variables.webImageName }}:${{ variables.packageVersion }} -f ${{ variables.webDockerFile }} .      
 
 - task: AzureCLI@2
-  displayName: Push container image to Azure container registry
+  displayName: Push web container image to Azure container registry
   inputs:
     azureSubscription: 'Azure-Workspace-Dev'
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
       az acr login --name ${{ variables.azureContainerRegistryName }}
-      docker tag ${{ variables.imageName }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
-      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.imageName }}
+      docker tag ${{ variables.webImageName }}:${{ variables.packageVersion }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.webImageName }}:${{ variables.packageVersion }}
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.webImageName }}:${{ variables.packageVersion }}
+
+- task: ExtractFiles@1
+  displayName: Extract api app files/folders from zip file
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Api.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/api'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: false
+
+- task: PowerShell@2
+  displayName: Copy api application files
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # Create destination folder
+      md $(build.artifactstagingdirectory)/webapi/files
+
+      Write-Host "Copy the nested publish directory contents of .net application"
+      
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/api' -Filter Out -Recurse -Force |
+          # Those 'filter' file objects should be folders
+          Where-Object {$_.PSIsContainer} |
+                ForEach-Object {        
+                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapi/files' -Force -Recurse
+              }
+
+- task: CopyFiles@2
+  displayName: Copy api dockerfile
+  inputs:
+    Contents: |
+      ${{ variables.apiDockerFile }}
+    TargetFolder: '$(build.artifactstagingdirectory)/webapi'
+
+- task: PowerShell@2
+  displayName: Build api image
+  inputs:
+    workingDirectory: '$(build.artifactstagingdirectory)/webapi'
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      docker build -t ${{ variables.apiImageName }}:${{ variables.packageVersion }} -f ${{ variables.apiDockerFile }} .      
+
+- task: AzureCLI@2
+  displayName: Push api container image to Azure container registry
+  inputs:
+    azureSubscription: 'Azure-Workspace-Dev'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login --name ${{ variables.azureContainerRegistryName }}
+      docker tag ${{ variables.apiImageName }}:${{ variables.packageVersion }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.apiImageName }}:${{ variables.packageVersion }}
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.apiImageName }}:${{ variables.packageVersion }}
 
 - task: CopyFiles@2
   displayName: Copy Cdn, Swagger, Build and release files 
   inputs:
     Contents: |
-      $(System.DefaultWorkingDirectory)/_Organization Management/drop/cdnContent/**
-      $(System.DefaultWorkingDirectory)/_Organization Management/drop/swagger.json
+      $(System.DefaultWorkingDirectory)/*/drop/cdnContent/**
+      $(System.DefaultWorkingDirectory)/*/drop/swagger.json
       Release/**
     TargetFolder: '$(build.artifactstagingdirectory)'
 
