@@ -609,7 +609,7 @@
       "type": "Microsoft.Resources/deployments",
       "resourceGroup": "[resourceGroup().name]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('containerName'))]",
+        "[resourceId('Microsoft.App/containerapps', parameters('containerName'))]",
         "[variables('appIdentityResourceId')]"
       ],
       "properties": {
