@@ -36,28 +36,28 @@
       "value": "orgmgmt"
     },
     "enableLicensing": {
-      "value": true
+      "value": "true"
     },
     "enableMasterAdministrations": {
-      "value": true
+      "value": "true"
     },
     "enableMasterAdministrationsClientSelection": {
-      "value": false
+      "value": "false"
     },
     "enableTripleARC": {
-      "value": true
+      "value": "true"
     },
     "googleTagManagerId": {
       "value": "0000"
     },
     "pollingInterval": {
-      "value": 1000
+      "value": "1000"
     },
     "settingsUrl": {
       "value": "https://dev.workspace.capego.net/orgmgmt/org/{orgId}"
     },
     "showMasterAdministrationsUI": {
-      "value": false
+      "value": "false"
     },
     "vaultUri": {
       "value": "https://dev-sc-vault-org-mgmt.vault.azure.net/"
@@ -81,7 +81,7 @@
       "value": "https://dev.workspace.capego.net/orgmgmt/"
     },
     "enableAdministrationContactManagement": {
-      "value": true
+      "value": "true"
     },
     "apiDNS": {
       "value": "dev-wktaasc-api-workspace.azure-api.net"
@@ -93,19 +93,19 @@
       "value": "https://dev.workspace.capego.net/workspaceselector/"
     },
     "ignoreCookieConsentForLogging": {
-      "value": true
+      "value": "true"
     },
     "environment": {
       "value": "dev"
     },
     "enableAdministrationCustomIdentifier": {
-      "value": true
+      "value": "true"
     },
     "enableAdministrationImport": {
-      "value": true
+      "value": "true"
     },
     "enableNewAdministrationDialog": {
-      "value": true
+      "value": "true"
     },
     "masterAdministrationsApiUrl": {
       "value": "https://dev-api.cloud-dev.wolterskluwer.eu/masteradministration/v1/"
@@ -135,7 +135,7 @@
       "value": "WKTAA.SC.OrganizationManagement.Dev"
     },
     "filterPersonalEnvironment": {
-      "value": true
+      "value": "true"
     },
     "orgSwicherUrl": {
       "value": "https://dev.workspace.capego.net/workspaceselector"
@@ -147,7 +147,7 @@
       "value": "Scandinavia Portal"
     },
     "oAuthShellApiConfigurationsUseRedisCache": {
-      "value": true
+      "value": "true"
     },
     "workspaceName": {
       "value": "Scandinavia Cloud"
