@@ -11,9 +11,6 @@
     "containerRegistryUser": {
       "type": "string"
     },
-    "containerRegistrySecretName": {
-      "type": "string"
-    },
     "containerRegistrySecretValue": {
       "type": "string"
     },
@@ -215,7 +212,6 @@
   "variables": {
     "appInsightsName": "[concat(parameters('coreResourceGroup'), '-ai')]",
     "subscriptionId": "[subscription().subscriptionId]",
-    "appServiceEnvironmentId": "[concat('/subscriptions/', variables('subscriptionId'), 'resourceGroups', resourceGroup().name, 'providers/Microsoft.App/managedEnvironments/', parameters('appServiceEnvironmentName'))]",
     "applicationLogoUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/')]",
     "iconUrl": "[concat(parameters('cdnBaseUrl'), '/icons')]",
     "settingsUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'), '/org/{orgId}')]",
@@ -234,39 +230,38 @@
     {
       "apiVersion": "2022-11-01-preview",
       "name": "[parameters('containerName')]",
-      "type": "Microsoft.App/containerapps",
+      "type": "Microsoft.App/containerApps",
       "kind": "containerapps",
       "location": "[resourceGroup().location]",
       "tags": "[parameters('tags')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
-        "environmentId": "[variables('appServiceEnvironmentId')]",
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('appServiceEnvironmentName'))]",
         "configuration": {
-          "secrets": {
-            "arrayValue": [
+          "secrets": [
               {
-                "name": "[parameters('containerRegistrySecretName')]",
+                "name": "registrypassword",
                 "value": "[parameters('containerRegistrySecretValue')]"
               }
-            ]
-          },
+          ],
           "registries": [
             {
               "server": "[parameters('containerRegistryServer')]",
               "username": "[parameters('containerRegistryUser')]",
-              "passwordSecretRef": "[parameters('containerRegistrySecretName')]"
+              "passwordSecretRef": "registrypassword"
             }
           ],
           "activeRevisionsMode": "Single",
-          "ingress": {
-            "value": {
+          "ingress": {            
               "external": true,
               "transport": "Auto",
               "allowInsecure": false,
               "targetPort": 80,
               "stickySessions": {
                 "affinity": "none"
-              }
-            }
+            }           
           }
         },
         "template": {
