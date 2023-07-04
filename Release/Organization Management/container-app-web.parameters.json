@@ -11,9 +11,6 @@
     "containerRegistryUser": {
       "value": "devwktaasccg"
     },
-    "containerRegistrySecretName": {
-      "value": "seceretname"
-    },
     "containerRegistrySecretValue": {
       "value": "secretvalue"
     },
