@@ -573,8 +573,8 @@
               "properties": {
                 "accessPolicies": [
                   {
-                    "tenantId": "[reference(variables('appIdentityResourceId'), '2016-08-01', 'Full').identity.tenantId]",
-                    "objectId": "[reference(variables('appIdentityResourceId'), '2016-08-01', 'Full').identity.principalId]",
+                    "tenantId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.tenantId]",
+                    "objectId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
                     "permissions": {
                       "keys": [
                         "UnwrapKey",
@@ -649,7 +649,7 @@
               "name": "[concat(variables('redisaccount'), '/Microsoft.Authorization/', parameters('guids').redis)]",
               "properties": {
                 "roleDefinitionId": "[variables('redisContributor')]",
-                "principalId": "[reference(parameters('webAppIdentityResourceId'), '2016-08-01', 'Full').identity.principalId]",
+                "principalId": "[reference(parameters('webAppIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
               }
             }
