@@ -282,6 +282,18 @@
                 {
                   "name": "AppSettings__ApplicationTitleUrl",
                   "value": "[parameters('applicationTitleUrl')]"
+                },                
+                {
+                  "name": "AppSettings__GoogleTagManagerId",
+                  "value": "[parameters('googleTagManagerId')]"
+                },
+                {
+                  "name": "AppSettings__PollingInterval",
+                  "value": "[parameters('pollingInterval')]"
+                },
+                {
+                  "name": "AppSettings__SettingsUrl",
+                  "value": "[variables('settingsUrl')]"
                 },
                 {
                   "name": "AppSettings__EnableLicensing",
@@ -298,18 +310,6 @@
                 {
                   "name": "AppSettings__EnableTripleARC",
                   "value": "[parameters('enableTripleARC')]"
-                },
-                {
-                  "name": "AppSettings__GoogleTagManagerId",
-                  "value": "[parameters('googleTagManagerId')]"
-                },
-                {
-                  "name": "AppSettings__PollingInterval",
-                  "value": "[parameters('pollingInterval')]"
-                },
-                {
-                  "name": "AppSettings__SettingsUrl",
-                  "value": "[variables('settingsUrl')]"
                 },
                 {
                   "name": "AppSettings__ShowMasterAdministrationsUI",
