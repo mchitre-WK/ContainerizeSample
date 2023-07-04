@@ -273,7 +273,7 @@
           "containers": [
             {
               "name": "[parameters('containerName')]",
-              "image": "[parameters('containerRegistryServer']/[parameters('containerImageName']",
+              "image": "[parameters('containerRegistryServer')]/[parameters('containerImageName']",
               "command": [],
               "resources": {
                 "cpu": "[parameters('containerCPU')]",
