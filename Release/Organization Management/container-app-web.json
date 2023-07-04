@@ -36,28 +36,28 @@
       "type": "string"
     },
     "enableLicensing": {
-      "type": "bool"
+      "type": "string"
     },
     "enableMasterAdministrations": {
-      "type": "bool"
+      "type": "string"
     },
     "enableMasterAdministrationsClientSelection": {
-      "type": "bool"
+      "type": "string"
     },
     "enableTripleARC": {
-      "type": "bool"
+      "type": "string"
     },
     "googleTagManagerId": {
       "type": "string"
     },
     "pollingInterval": {
-      "type": "int"
+      "type": "string"
     },
     "settingsUrl": {
       "type": "string"
     },
     "showMasterAdministrationsUI": {
-      "type": "bool"
+      "type": "string"
     },
     "vaultUri": {
       "type": "string"
@@ -82,7 +82,7 @@
       "type": "string"
     },
     "enableAdministrationContactManagement": {
-      "type": "bool"
+      "type": "string"
     },
     "apiDNS": {
       "type": "string"
@@ -94,19 +94,19 @@
       "type": "string"
     },
     "ignoreCookieConsentForLogging": {
-      "type": "bool"
+      "type": "string"
     },
     "environment": {
       "type": "string"
     },
     "enableAdministrationCustomIdentifier": {
-      "type": "bool"
+      "type": "string"
     },
     "enableAdministrationImport": {
-      "type": "bool"
+      "type": "string"
     },
     "enableNewAdministrationDialog": {
-      "type": "bool"
+      "type": "string"
     },
     "masterAdministrationsApiUrl": {
       "type": "string"
@@ -136,7 +136,7 @@
       "type": "string"
     },
     "filterPersonalEnvironment": {
-      "type": "bool"
+      "type": "string"
     },
     "orgSwicherUrl": {
       "type": "string"
@@ -148,7 +148,7 @@
       "type": "string"
     },
     "oAuthShellApiConfigurationsUseRedisCache": {
-      "type": "bool"
+      "type": "string"
     },
     "workspaceName": {
       "type": "string"
