@@ -166,7 +166,7 @@ steps:
       # Write your PowerShell commands here.
       
       # Create destination folder
-      rm $(build.artifactstagingdirectory)/webapi -r
+      rm $(build.artifactstagingdirectory)/webapp -r
       rm $(build.artifactstagingdirectory)/webapi -r
      
       Write-Host "Deleted the web and api directories"
