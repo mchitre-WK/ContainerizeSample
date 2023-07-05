@@ -55,6 +55,7 @@ steps:
       # Write your PowerShell commands here.
       
       # Create destination folder
+      md $(build.artifactstagingdirectory)/webapp
       md $(build.artifactstagingdirectory)/webapp/files
 
       Write-Host "Copy the nested publish directory contents of .net application"
@@ -109,6 +110,7 @@ steps:
       # Write your PowerShell commands here.
       
       # Create destination folder
+      md $(build.artifactstagingdirectory)/webapi
       md $(build.artifactstagingdirectory)/webapi/files
 
       Write-Host "Copy the nested publish directory contents of .net application"
