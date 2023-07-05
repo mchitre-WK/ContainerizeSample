@@ -661,7 +661,7 @@
    "outputs": {
     "webContainerFQDN": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).dnsSettings.fqdn]"
+      "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).latestRevisionFqdn]"
     }
   }
 }
