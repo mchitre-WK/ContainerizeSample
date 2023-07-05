@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 
 WORKDIR /app
-COPY containerfiles/ ./
+COPY files/ ./
 
 CMD ["dotnet", "Wktaae.OrganizationManagement.Api.dll"]
