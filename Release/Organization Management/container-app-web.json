@@ -665,6 +665,10 @@
     "webContainerFQDN": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).latestRevisionFqdn]"
+    },
+    "webContainerRevision": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).latestRevisionName]"
     }
   }
 }
