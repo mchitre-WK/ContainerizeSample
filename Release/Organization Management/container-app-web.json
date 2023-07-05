@@ -227,8 +227,7 @@
     "addOrganizationUrl": "[concat(parameters('WorkspaceBaseUrl'), '/pers')]",
     "baseAppUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'))]",
     "tenantId": "[subscription().tenantId]",
-    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
-    "revision": "[concat('rev-',replace(parameters('imageVersion'),'.', '-'))]"
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]"
   },
   "resources": [
     {
@@ -269,7 +268,6 @@
           }
         },
         "template": {
-          "revisionSuffix": "[variables('revision')]",
           "containers": [
             {
               "name": "[parameters('containerName')]",
