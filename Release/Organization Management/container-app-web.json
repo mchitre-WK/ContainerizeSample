@@ -20,6 +20,9 @@
     "containerImageName": {
       "type": "string"
     },
+    "imageVersion":{
+      "type": "string"
+    },
     "containerCPU": {
       "type": "string"
     },
@@ -265,10 +268,11 @@
           }
         },
         "template": {
+          "revisionSuffix": "[parameters('imageVersion')]",
           "containers": [
             {
               "name": "[parameters('containerName')]",
-              "image": "[concat(parameters('containerRegistryServer'), '/', parameters('containerImageName'))]",
+              "image": "[concat(parameters('containerRegistryServer'), '/', parameters('containerImageName'), ':', parameters('imageVersion'))]",
               "command": [],
               "resources": {
                 "cpu": "[parameters('containerCPU')]",
