@@ -23,9 +23,9 @@ variables:
 - name: azureContainerRegistryName
   value: devwktaasc
 - name: webDockerFile
-  value: Dockerfile-web
+  value: Dockerfile-org-mgmt-web
 - name: apiDockerFile
-  value: Dockerfile-api
+  value: Dockerfile-org-mgmt-api
 
 steps:
 - task: UniversalPackages@0
