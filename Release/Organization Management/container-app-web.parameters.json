@@ -20,6 +20,9 @@
     "containerImageName": {
       "value": "org-mgmt-web:latest"
     },
+    "imageVersion":{
+      "value": "6.1.0"
+    },
     "containerCPU": {
       "value": "0.5"
     },
