@@ -417,7 +417,7 @@
                   "value": "[parameters('oAuthShellApiConfigurationsMasterAdministrationScope')]"
                 },
                 {
-                  "name": "OAuthShellTripleAConfiguration__AdditionalScopes___0",
+                  "name": "OAuthShellTripleAConfiguration__AdditionalScopes__0",
                   "value": "[parameters('apiOAuthConfigurationDefaultScope')]"
                 },
                 {
