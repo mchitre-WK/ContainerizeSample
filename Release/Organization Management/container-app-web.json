@@ -550,7 +550,8 @@
             }
           ],
           "scale": {
-            "minReplicas": 0
+            "minReplicas": 0,
+            "maxReplicas": 3
           }
         }
       }
