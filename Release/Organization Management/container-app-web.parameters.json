@@ -23,6 +23,9 @@
     "imageVersion":{
       "value": "6.1.0"
     },
+    "containerRevision": {
+      "value": "23-1"
+    },
     "containerCPU": {
       "value": "0.5"
     },
