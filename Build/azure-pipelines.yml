@@ -15,7 +15,7 @@ variables:
 - name: packageName
   value: wktaae-org-mgmt
 - name: packageVersion
-  value: 6.3.0
+  value: 6.5.0
 - name: webImageName
   value: org-mgmt-web
 - name: apiImageName
