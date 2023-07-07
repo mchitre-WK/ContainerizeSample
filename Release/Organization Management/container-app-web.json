@@ -271,7 +271,7 @@
           }
         },
         "template": {
-          "revisionSuffix": "$[parameters('containerRevision')]",
+          "revisionSuffix": "[parameters('containerRevision')]",
           "containers": [
             {
               "name": "[parameters('containerName')]",
