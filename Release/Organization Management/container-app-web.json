@@ -259,7 +259,7 @@
               "passwordSecretRef": "registrypassword"
             }
           ],
-          "activeRevisionsMode": "Single",
+          "activeRevisionsMode": "Multiple",
           "ingress": {            
               "external": true,
               "transport": "Auto",
