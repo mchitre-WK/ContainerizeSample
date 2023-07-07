@@ -259,6 +259,7 @@
               "passwordSecretRef": "registrypassword"
             }
           ],
+          "maxInactiveRevisions": 1,
           "activeRevisionsMode": "Multiple",
           "ingress": {            
               "external": true,
