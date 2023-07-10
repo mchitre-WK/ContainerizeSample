@@ -288,7 +288,13 @@
               "transport": "Auto",
               "allowInsecure": false,
               "targetPort": 80,
-              "traffic": "[if(equals(parameters('containerRevision'), 'null'), variables('latestRevision'), variables('multipleRevision'))]",
+              "traffic": [
+                {
+                  "latestRevision": true,
+                  "weight": 100,
+                  "label": "blue"
+                }
+              ],
               "stickySessions": {
                 "affinity": "none"
             }           
