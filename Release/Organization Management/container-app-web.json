@@ -217,8 +217,8 @@
     "applicationTitleUrl": {
       "type": "string"
     },
-    "appGatewayIPRules": {
-      "type": "array"
+    "appGatewayIp": {
+      "type": "string"
     }
   },
   "variables": {
@@ -292,6 +292,14 @@
               "allowInsecure": false,
               "targetPort": 80,
               "traffic": "[if(equals(parameters('previousRevision'), 'no'), variables('latestRevision'), variables('multipleRevision'))]",
+              "ipSecurityRestrictions": [
+                {
+                  "ipAddress": "[parameters('appGatewayIp')]",
+                  "action": "Allow",
+                  "priority": 1,
+                  "name": "Application Gateway"
+                }
+              ],
               "stickySessions": {
                 "affinity": "none"
               }                      
