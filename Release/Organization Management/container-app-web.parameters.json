@@ -213,6 +213,16 @@
       "value": {
         "redis": "ef4d620b-a210-4971-b371-5a4a4a3e9fb3"
       }
+    },
+    "ipRules": {
+      "value": [
+        {
+          "ipAddress": "20.82.16.8/32",
+          "action": "Allow",
+          "priority": 1,
+          "name": "Application Gateway"
+        }
+      ]
     }
   }
 }
