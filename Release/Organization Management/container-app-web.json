@@ -216,6 +216,9 @@
     },
     "applicationTitleUrl": {
       "type": "string"
+    },
+    "rolesConfigured": {
+      "type": "bool"
     }
   },
   "variables": {
@@ -631,6 +634,7 @@
       }
     },
     {
+      "condition": "[not(parameters('rolesConfigured'))]"
       "apiVersion": "2017-05-10",
       "name": "setupRoleAssignments",
       "type": "Microsoft.Resources/deployments",
