@@ -634,7 +634,7 @@
       }
     },
     {
-      "condition": "[not(parameters('rolesConfigured'))]"
+      "condition": "[not(parameters('rolesConfigured'))]",
       "apiVersion": "2017-05-10",
       "name": "setupRoleAssignments",
       "type": "Microsoft.Resources/deployments",
