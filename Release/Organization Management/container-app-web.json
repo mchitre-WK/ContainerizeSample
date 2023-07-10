@@ -294,8 +294,7 @@
               "traffic": "[if(equals(parameters('previousRevision'), 'no'), variables('latestRevision'), variables('multipleRevision'))]",
               "stickySessions": {
                 "affinity": "none"
-              },
-              "ipSecurityRestrictions": "[parameters('appGatewayIPRules')]"         
+              }                      
           }
         },
         "template": {
