@@ -26,6 +26,9 @@
     "containerRevision": {
       "type": "string"
     },
+    "previousRevision": {
+      "type": "string"
+    },
     "containerCPU": {
       "type": "string"
     },
