@@ -217,8 +217,8 @@
     "applicationTitleUrl": {
       "type": "string"
     },
-    "ipRules": {
-      "type": "string"
+    "appGatewayIPRules": {
+      "type": "array"
     }
   },
   "variables": {
@@ -295,7 +295,7 @@
               "stickySessions": {
                 "affinity": "none"
               },
-              "ipSecurityRestrictions": "[parameters('ipRules')]"         
+              "ipSecurityRestrictions": "[parameters('appGatewayIPRules')]"         
           }
         },
         "template": {
