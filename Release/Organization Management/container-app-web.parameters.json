@@ -26,6 +26,9 @@
     "containerRevision": {
       "value": "23-1"
     },
+    "previousRevision": {
+      "value": ""
+    },
     "containerCPU": {
       "value": "0.5"
     },
