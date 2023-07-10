@@ -233,7 +233,26 @@
     "addOrganizationUrl": "[concat(parameters('WorkspaceBaseUrl'), '/pers')]",
     "baseAppUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'))]",
     "tenantId": "[subscription().tenantId]",
-    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]"
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
+    "multipleRevision": [
+      {
+        "latestRevision": true,
+        "weight": 100,
+        "label": "blue"
+      },
+      {
+        "revisionName": "[parameters('previousRevision')]",
+        "weight": 0,
+        "label": "green"
+      }
+    ],
+    "latestRevision": [
+      {
+        "latestRevision": true,
+        "weight": 100,
+        "label": "blue"
+      }
+    ]
   },
   "resources": [
     {
@@ -269,6 +288,7 @@
               "transport": "Auto",
               "allowInsecure": false,
               "targetPort": 80,
+              "traffic": "[if(equals(parameters('containerRevision'), ''), variables('latestRevision'), variables('multipleRevision'))]",
               "stickySessions": {
                 "affinity": "none"
             }           
