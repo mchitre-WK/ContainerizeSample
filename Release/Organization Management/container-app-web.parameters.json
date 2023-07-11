@@ -215,7 +215,7 @@
       }
     },
     "rolesConfigured": {
-      "value": true
+      "value": "True"
     }
   }
 }
