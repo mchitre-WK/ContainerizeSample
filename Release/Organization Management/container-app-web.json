@@ -218,7 +218,7 @@
       "type": "string"
     },
     "rolesConfigured": {
-      "type": "bool"
+      "type": "string"
     }
   },
   "variables": {
@@ -634,7 +634,7 @@
       }
     },
     {
-      "condition": "[not(parameters('rolesConfigured'))]",
+      "condition": "[equals(parameters('rolesConfigured'),'False')]",
       "apiVersion": "2017-05-10",
       "name": "setupRoleAssignments",
       "type": "Microsoft.Resources/deployments",
