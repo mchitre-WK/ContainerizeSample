@@ -59,9 +59,6 @@
     "apiOAuthConfigurationDefaultScope": {
       "value": "WKTAA.SC.OrganizationManagement"
     },
-    "redisCacheAccountName": {
-      "value": "dev-wktaasc-redis-org-mgmt"
-    },
     "resourceGroup": {
       "value": "dev-wktaasc-org-mgmt"
     },
@@ -87,9 +84,6 @@
     },
     "swaggerconfigurationClientid": {
       "value": "string"
-    },
-    "rolesConfigured": {
-      "value": "True"
     }
   }
 }
