@@ -695,11 +695,11 @@
     }
   ],
    "outputs": {
-    "webContainerFQDN": {
+    "containerFQDN": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).configuration.ingress.fqdn]"
     },
-    "webContainerRevision": {
+    "containerRevision": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).latestRevisionName]"
     }
