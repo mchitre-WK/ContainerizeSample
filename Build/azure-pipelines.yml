@@ -94,6 +94,19 @@ steps:
       docker tag ${{ variables.webImageName }}:${{ variables.packageVersion }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.webImageName }}:${{ variables.packageVersion }}
       docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.webImageName }}:${{ variables.packageVersion }}
 
+- task: PowerShell@2
+  displayName: Delete web application files after image is built
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # delete destination folder
+      rm $(build.artifactstagingdirectory)/webapp -r
+      rm $(System.DefaultWorkingDirectory)/publish/web 
+
+      Write-Host "Deleted the webapp directories"
+
 - task: ExtractFiles@1
   displayName: Extract api app files/folders from zip file
   inputs:
@@ -159,17 +172,17 @@ steps:
     TargetFolder: '$(build.artifactstagingdirectory)'
 
 - task: PowerShell@2
-  displayName: Delete web and api application files after image is built
+  displayName: Delete api application files after image is built
   inputs:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
       
-      # Create destination folder
-      rm $(build.artifactstagingdirectory)/webapp -r
+      # Delete destination folder     
       rm $(build.artifactstagingdirectory)/webapi -r
+      rm $(System.DefaultWorkingDirectory)/publish/api
      
-      Write-Host "Deleted the web and api directories"
+      Write-Host "Deleted the api directories"
 
 
 - task: PublishBuildArtifacts@1
