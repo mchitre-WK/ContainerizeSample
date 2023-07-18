@@ -103,7 +103,7 @@ steps:
       
       # delete destination folder
       rm $(build.artifactstagingdirectory)/webapp -r
-      rm $(System.DefaultWorkingDirectory)/publish/web 
+      rm $(System.DefaultWorkingDirectory)/publish/web -r
 
       Write-Host "Deleted the webapp directories"
 
@@ -180,7 +180,7 @@ steps:
       
       # Delete destination folder     
       rm $(build.artifactstagingdirectory)/webapi -r
-      rm $(System.DefaultWorkingDirectory)/publish/api
+      rm $(System.DefaultWorkingDirectory)/publish/api -r
      
       Write-Host "Deleted the api directories"
 
