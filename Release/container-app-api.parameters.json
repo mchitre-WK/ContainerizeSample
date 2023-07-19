@@ -84,9 +84,6 @@
     },
     "swaggerconfigurationClientid": {
       "value": "string"
-    },
-    "configureVault": {
-      "value": "string"
     }
   }
 }
