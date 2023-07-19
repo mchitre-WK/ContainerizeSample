@@ -217,6 +217,9 @@
     "applicationTitleUrl": {
       "type": "string"
     },
+    "configureVault": {
+      "type": "string"
+    },
     "configureRedis": {
       "type": "string"
     }
@@ -588,6 +591,7 @@
       }
     },
     {
+      "condition": "[equals(parameters('configureVault'),'True')]",
       "apiVersion": "2017-05-10",
       "name": "enableVaultSecurity",
       "type": "Microsoft.Resources/deployments",
