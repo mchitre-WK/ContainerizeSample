@@ -87,7 +87,7 @@
     },
     "swaggerconfigurationClientid": {
       "type": "string"
-    },
+    },   
     "configureVault": {
       "type": "string"
     }
@@ -220,6 +220,10 @@
                 {
                   "name": "SwaggerConfiguration__ClientId",
                   "value": "[parameters('swaggerconfigurationClientid')]"
+                },
+                {
+                  "name": "SwaggerConfiguration__AdditionalScopes__0",
+                  "value": "[parameters('apiOAuthConfigurationDefaultScope')]"
                 }
               ]
             }
