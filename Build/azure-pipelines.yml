@@ -107,60 +107,60 @@ steps:
 
       Write-Host "Deleted the webapp directories"
 
-- task: ExtractFiles@1
-  displayName: Extract api app files/folders from zip file
-  inputs:
-    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Api.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/api'
-    cleanDestinationFolder: true
-    overwriteExistingFiles: false
+# - task: ExtractFiles@1
+#   displayName: Extract api app files/folders from zip file
+#   inputs:
+#     archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Api.zip'
+#     destinationFolder: '$(System.DefaultWorkingDirectory)/publish/api'
+#     cleanDestinationFolder: true
+#     overwriteExistingFiles: false
 
-- task: PowerShell@2
-  displayName: Copy api application files
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
+# - task: PowerShell@2
+#   displayName: Copy api application files
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       # Write your PowerShell commands here.
       
-      # Create destination folder
-      md $(build.artifactstagingdirectory)/webapi
-      md $(build.artifactstagingdirectory)/webapi/files
+#       # Create destination folder
+#       md $(build.artifactstagingdirectory)/webapi
+#       md $(build.artifactstagingdirectory)/webapi/files
 
-      Write-Host "Copy the nested publish directory contents of .net application"
+#       Write-Host "Copy the nested publish directory contents of .net application"
       
-      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/api' -Filter Out -Recurse -Force |
-          # Those 'filter' file objects should be folders
-          Where-Object {$_.PSIsContainer} |
-                ForEach-Object {        
-                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapi/files' -Force -Recurse
-              }
+#       Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/api' -Filter Out -Recurse -Force |
+#           # Those 'filter' file objects should be folders
+#           Where-Object {$_.PSIsContainer} |
+#                 ForEach-Object {        
+#                   Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapi/files' -Force -Recurse
+#               }
 
-- task: CopyFiles@2
-  displayName: Copy api dockerfile
-  inputs:
-    Contents: |
-      ${{ variables.apiDockerFile }}
-    TargetFolder: '$(build.artifactstagingdirectory)/webapi'
+# - task: CopyFiles@2
+#   displayName: Copy api dockerfile
+#   inputs:
+#     Contents: |
+#       ${{ variables.apiDockerFile }}
+#     TargetFolder: '$(build.artifactstagingdirectory)/webapi'
 
-- task: PowerShell@2
-  displayName: Build api image
-  inputs:
-    workingDirectory: '$(build.artifactstagingdirectory)/webapi'
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
-      docker build -t ${{ variables.apiImageName }}:${{ variables.packageVersion }} -f ${{ variables.apiDockerFile }} .      
+# - task: PowerShell@2
+#   displayName: Build api image
+#   inputs:
+#     workingDirectory: '$(build.artifactstagingdirectory)/webapi'
+#     targetType: 'inline'
+#     script: |
+#       # Write your PowerShell commands here.
+#       docker build -t ${{ variables.apiImageName }}:${{ variables.packageVersion }} -f ${{ variables.apiDockerFile }} .      
 
-- task: AzureCLI@2
-  displayName: Push api container image to Azure container registry
-  inputs:
-    azureSubscription: 'Azure-Workspace-Dev'
-    scriptType: 'pscore'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az acr login --name ${{ variables.azureContainerRegistryName }}
-      docker tag ${{ variables.apiImageName }}:${{ variables.packageVersion }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.apiImageName }}:${{ variables.packageVersion }}
-      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.apiImageName }}:${{ variables.packageVersion }}
+# - task: AzureCLI@2
+#   displayName: Push api container image to Azure container registry
+#   inputs:
+#     azureSubscription: 'Azure-Workspace-Dev'
+#     scriptType: 'pscore'
+#     scriptLocation: 'inlineScript'
+#     inlineScript: |
+#       az acr login --name ${{ variables.azureContainerRegistryName }}
+#       docker tag ${{ variables.apiImageName }}:${{ variables.packageVersion }} ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.apiImageName }}:${{ variables.packageVersion }}
+#       docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${{ variables.apiImageName }}:${{ variables.packageVersion }}
 
 - task: CopyFiles@2
   displayName: Copy Cdn, Swagger, Build and release files 
