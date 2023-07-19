@@ -216,6 +216,12 @@
     },
     "applicationTitleUrl": {
       "type": "string"
+    },
+    "configureVault": {
+      "type": "string"
+    },
+    "configureRedis": {
+      "type": "string"
     }
   },
   "variables": {
@@ -233,6 +239,7 @@
     "addOrganizationUrl": "[concat(parameters('WorkspaceBaseUrl'), '/pers')]",
     "baseAppUrl": "[concat(parameters('WorkspaceBaseUrl'), '/', parameters('applicationSuffix'))]",
     "tenantId": "[subscription().tenantId]",
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
     "multipleRevision": [
       {
         "latestRevision": true,
@@ -580,6 +587,113 @@
             "minReplicas": 0,
             "maxReplicas": 3
           }
+        }
+      }
+    },
+    {
+      "condition": "[equals(parameters('configureVault'),'True')]",
+      "apiVersion": "2017-05-10",
+      "name": "enableVaultSecurity",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('vaultResourceGroup')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.App/containerapps', parameters('containerName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults/accessPolicies",
+              "name": "[concat(parameters('vaultName'), '/add')]",
+              "apiVersion": "2018-02-14",
+              "properties": {
+                "accessPolicies": [
+                  {
+                    "tenantId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.tenantId]",
+                    "objectId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
+                    "permissions": {
+                      "keys": [
+                        "UnwrapKey",
+                        "WrapKey"
+                      ],
+                      "secrets": [
+                        "Get",
+                        "List"
+                      ],
+                      "certificates": [
+                        "Get",
+                        "List",
+                        "ListIssuers"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "condition": "[equals(parameters('configureRedis'),'True')]",
+      "apiVersion": "2017-05-10",
+      "name": "setupRoleAssignments",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[resourceGroup().name]",
+      "dependsOn": [
+        "[resourceId('Microsoft.App/containerapps', parameters('containerName'))]",
+        "[variables('appIdentityResourceId')]"
+      ],
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "webAppIdentityResourceId": {
+            "value": "[variables('appIdentityResourceId')]"
+          },
+          "guids": {
+            "value": "[parameters('guids')]"
+          },
+          "redisCacheAccountName": {
+            "value": "[parameters('redisCacheAccountName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "webAppIdentityResourceId": {
+              "type": "string"
+            },
+            "guids": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "redisCacheAccountName": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "redisaccount": "[parameters('redisCacheAccountName')]",
+            "redisContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'e0f68234-74aa-48ed-b826-c38b57376e17')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Cache/Redis/providers/roleAssignments",
+              "apiVersion": "2018-09-01-preview",
+              "name": "[concat(variables('redisaccount'), '/Microsoft.Authorization/', parameters('guids').redis)]",
+              "properties": {
+                "roleDefinitionId": "[variables('redisContributor')]",
+                "principalId": "[reference(parameters('webAppIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ]
         }
       }
     }
