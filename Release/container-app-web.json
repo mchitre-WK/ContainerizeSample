@@ -217,7 +217,7 @@
     "applicationTitleUrl": {
       "type": "string"
     },
-    "rolesConfigured": {
+    "configureRedis": {
       "type": "string"
     }
   },
@@ -634,7 +634,7 @@
       }
     },
     {
-      "condition": "[equals(parameters('rolesConfigured'),'False')]",
+      "condition": "[equals(parameters('configureRedis'),'True')]",
       "apiVersion": "2017-05-10",
       "name": "setupRoleAssignments",
       "type": "Microsoft.Resources/deployments",
