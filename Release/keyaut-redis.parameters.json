@@ -3,31 +3,31 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
      "webContainerName": {
-      "value": "string"
+      "value": "dev-wktaasc-org-mgmt-web"
     },
     "apiContainerName": {
-      "value": "string"
+      "value": "dev-wktaasc-org-mgmt-api"
     },    
     "vaultUri": {
-      "value": "string"
+      "value": "https://dev-sc-vault-org-mgmt.vault.azure.net/"
     },
     "redisCacheAccountName": {
-      "value": "string"
+      "value": "dev-wktaasc-redis-org-mgmt"
     },
     "resourceGroup": {
-      "value": "string"
+      "value": "dev-wktaasc-org-mgmt"
     },   
     "vaultResourceGroup": {
-      "value": "string"
+      "value": "dev-wktaasc-org-mgmt"
     },
     "vaultName": {
-      "value": "string"
+      "value": "dev-sc-vault-org-mgmt"
     },  
     "configureKeyvault": {
-      "value": "string"
+      "value": "True"
     },
     "configureRedis": {
-      "value": "string"
+      "value": "True"
     }
   }
 }
