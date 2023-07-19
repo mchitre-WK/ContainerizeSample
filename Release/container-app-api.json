@@ -232,6 +232,7 @@
       }
     },
     {
+      "condition": "[equals(parameters('configureVault'),'True')]",
       "apiVersion": "2017-05-10",
       "name": "enableVaultSecurity",
       "type": "Microsoft.Resources/deployments",
