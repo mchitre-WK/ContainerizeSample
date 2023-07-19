@@ -213,12 +213,6 @@
       "value": {
         "redis": "ef4d620b-a210-4971-b371-5a4a4a3e9fb3"
       }
-    },
-    "configureRedis": {
-      "value": "True"
-    },
-    "configureVault": {
-      "value": "True"
     }
   }
 }
