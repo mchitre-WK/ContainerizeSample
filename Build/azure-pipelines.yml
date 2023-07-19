@@ -171,18 +171,18 @@ steps:
       Release/**
     TargetFolder: '$(build.artifactstagingdirectory)'
 
-- task: PowerShell@2
-  displayName: Delete api application files after image is built
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
+# - task: PowerShell@2
+#   displayName: Delete api application files after image is built
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       # Write your PowerShell commands here.
       
-      # Delete destination folder     
-      rm $(build.artifactstagingdirectory)/webapi -r
-      rm $(System.DefaultWorkingDirectory)/publish/api -r
+#       # Delete destination folder     
+#       rm $(build.artifactstagingdirectory)/webapi -r
+#       rm $(System.DefaultWorkingDirectory)/publish/api -r
      
-      Write-Host "Deleted the api directories"
+#       Write-Host "Deleted the api directories"
 
 
 - task: PublishBuildArtifacts@1
