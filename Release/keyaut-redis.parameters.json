@@ -7,17 +7,11 @@
     },
     "apiContainerName": {
       "value": "dev-wktaasc-org-mgmt-api"
-    },    
-    "vaultUri": {
-      "value": "https://dev-sc-vault-org-mgmt.vault.azure.net/"
     },
     "redisCacheAccountName": {
       "value": "dev-wktaasc-redis-org-mgmt"
     },
     "resourceGroup": {
-      "value": "dev-wktaasc-org-mgmt"
-    },   
-    "vaultResourceGroup": {
       "value": "dev-wktaasc-org-mgmt"
     },
     "vaultName": {
