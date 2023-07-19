@@ -1,0 +1,288 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appServiceEnvironmentName": {
+      "type": "string"
+    },
+    "containerRegistryServer": {
+      "type": "string"
+    },
+    "containerRegistryUser": {
+      "type": "string"
+    },
+    "containerRegistrySecretValue": {
+      "type": "string"
+    },
+    "containerName": {
+      "type": "string"
+    },
+    "containerImageName": {
+      "type": "string"
+    },
+    "imageVersion": {
+      "type": "string"
+    },
+    "containerRevision": {
+      "type": "string"
+    },
+    "previousRevision": {
+      "type": "string"
+    },
+    "containerCPU": {
+      "type": "string"
+    },
+    "containerMemory": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "object"
+    },
+    "WorkspaceBaseUrl": {
+      "type": "string"
+    },
+    "enableTripleARC": {
+      "type": "string"
+    },
+    "vaultUri": {
+      "type": "string"
+    },
+    "ASPNETCORE_ENVIRONMENT": {
+      "type": "string",
+      "defaultValue": "Production"
+    },
+    "cdnBaseUrl": {
+      "type": "string"
+    },
+    "coreResourceGroup": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "apiOAuthConfigurationDefaultScope": {
+      "type": "string"
+    },
+    "resourceGroup": {
+      "type": "string"
+    },
+    "PandaServiceBaseUrl": {
+      "type": "string"
+    },
+    "vaultResourceGroup": {
+      "type": "string"
+    },
+    "vaultName": {
+      "type": "string"
+    },
+    "guids": {
+      "type": "object",
+      "defaultValue": {}
+    },
+    "OAuthApiConfigurationClientid": {
+      "type": "string"
+    },
+    "OAuthApiConfigurationScope": {
+      "type": "string"
+    },
+    "swaggerconfigurationClientid": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "appInsightsName": "[concat(parameters('coreResourceGroup'), '-ai')]",
+    "subscriptionId": "[subscription().subscriptionId]",
+    "tenantId": "[subscription().tenantId]",
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
+    "multipleRevision": [
+      {
+        "latestRevision": true,
+        "weight": 100,
+        "label": "blue"
+      },
+      {
+        "revisionName": "[parameters('previousRevision')]",
+        "weight": 0,
+        "label": "green"
+      }
+    ],
+    "latestRevision": [
+      {
+        "latestRevision": true,
+        "weight": 100,
+        "label": "blue"
+      }
+    ]
+  },
+  "resources": [
+    {
+      "apiVersion": "2022-11-01-preview",
+      "name": "[parameters('containerName')]",
+      "type": "Microsoft.App/containerApps",
+      "kind": "containerapps",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('tags')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('appServiceEnvironmentName'))]",
+        "configuration": {
+          "secrets": [
+            {
+              "name": "registrypassword",
+              "value": "[parameters('containerRegistrySecretValue')]"
+            }
+          ],
+          "registries": [
+            {
+              "server": "[parameters('containerRegistryServer')]",
+              "username": "[parameters('containerRegistryUser')]",
+              "passwordSecretRef": "registrypassword"
+            }
+          ],
+          "maxInactiveRevisions": 1,
+          "activeRevisionsMode": "Multiple",
+          "ingress": {
+            "external": true,
+            "transport": "Auto",
+            "allowInsecure": false,
+            "targetPort": 80,
+            "traffic": "[if(equals(parameters('previousRevision'), 'no'), variables('latestRevision'), variables('multipleRevision'))]",
+            "stickySessions": {
+              "affinity": "none"
+            }
+          }
+        },
+        "template": {
+          "revisionSuffix": "[parameters('containerRevision')]",
+          "containers": [
+            {
+              "name": "[parameters('containerName')]",
+              "image": "[concat(parameters('containerRegistryServer'), '/', parameters('containerImageName'), ':', parameters('imageVersion'))]",
+              "command": [],
+              "resources": {
+                "cpu": "[parameters('containerCPU')]",
+                "memory": "[parameters('containerMemory')]"
+              },
+              "env": [
+                {
+                  "name": "AppSettings__EnableTripleARC",
+                  "value": "[parameters('enableTripleARC')]"
+                },
+                {
+                  "name": "AppSettings__VaultUri",
+                  "value": "[parameters('vaultUri')]"
+                },
+                {
+                  "name": "ASPNETCORE_ENVIRONMENT",
+                  "value": "[parameters('ASPNETCORE_ENVIRONMENT')]"
+                },
+                {
+                  "name": "cdnBaseUrl",
+                  "value": "[parameters('cdnBaseUrl')]"
+                },
+                {
+                  "name": "AppSettings__Environment",
+                  "value": "[parameters('environment')]"
+                },             
+                {
+                  "name": "OAuthConfiguration__EnableTripleARC",
+                  "value": "[parameters('enableTripleARC')]"
+                },
+                {
+                  "name": "ApplicationInsights__InstrumentationKey",
+                  "value": "[reference(resourceId(parameters('coreResourceGroup'), 'Microsoft.Insights/components', variables('appInsightsName')), '2014-04-01').InstrumentationKey]"
+                },
+                {
+                  "name": "PandaService__ServiceBaseUrl",
+                  "value": "[parameters('PandaServiceBaseUrl')]"
+                },
+                {
+                  "name": "CORSAllowedOrigins__ApplicationUrl",
+                  "value": "[parameters('WorkspaceBaseUrl')]"
+                },
+                {
+                  "name": "OAuthApiConfigurations__Provisioning__ClientId",
+                  "value": "[parameters('OAuthApiConfigurationClientid')]"
+                },
+                {
+                  "name": "OAuthApiConfigurations__Provisioning__Scope",
+                  "value": "[parameters('OAuthApiConfigurationScope')]"
+                },
+                {
+                  "name": "OAuthConfiguration__DefaultScope",
+                  "value": "[parameters('apiOAuthConfigurationDefaultScope')]"
+                },
+                {
+                  "name": "SwaggerConfiguration__ClientId",
+                  "value": "[parameters('swaggerconfigurationClientid')]"
+                }
+              ]
+            }
+          ],
+          "scale": {
+            "minReplicas": 0,
+            "maxReplicas": 3
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "enableVaultSecurity",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('vaultResourceGroup')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.App/containerapps', parameters('containerName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults/accessPolicies",
+              "name": "[concat(parameters('vaultName'), '/add')]",
+              "apiVersion": "2018-02-14",
+              "properties": {
+                "accessPolicies": [
+                  {
+                    "tenantId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.tenantId]",
+                    "objectId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
+                    "permissions": {
+                      "keys": [
+                        "UnwrapKey",
+                        "WrapKey"
+                      ],
+                      "secrets": [
+                        "Get",
+                        "List"
+                      ],
+                      "certificates": [
+                        "Get",
+                        "List",
+                        "ListIssuers"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "apiContainerFQDN": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).configuration.ingress.fqdn]"
+    },
+    "apiContainerRevision": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.App/containerapps', parameters('containerName'))).latestRevisionName]"
+    }
+  }
+}
