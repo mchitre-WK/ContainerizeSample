@@ -87,16 +87,12 @@
     },
     "swaggerconfigurationClientid": {
       "type": "string"
-    },
-    "configureVault": {
-      "type": "string"
     }
   },
   "variables": {
     "appInsightsName": "[concat(parameters('coreResourceGroup'), '-ai')]",
     "subscriptionId": "[subscription().subscriptionId]",
-    "tenantId": "[subscription().tenantId]",
-    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
+    "tenantId": "[subscription().tenantId]",    
     "multipleRevision": [
       {
         "latestRevision": true,
@@ -228,53 +224,6 @@
             "minReplicas": 0,
             "maxReplicas": 3
           }
-        }
-      }
-    },
-    {
-      "condition": "[equals(parameters('configureVault'),'True')]",
-      "apiVersion": "2017-05-10",
-      "name": "enableVaultSecurity",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[parameters('vaultResourceGroup')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.App/containerapps', parameters('containerName'))]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "resources": [
-            {
-              "type": "Microsoft.KeyVault/vaults/accessPolicies",
-              "name": "[concat(parameters('vaultName'), '/add')]",
-              "apiVersion": "2018-02-14",
-              "properties": {
-                "accessPolicies": [
-                  {
-                    "tenantId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.tenantId]",
-                    "objectId": "[reference(variables('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
-                    "permissions": {
-                      "keys": [
-                        "UnwrapKey",
-                        "WrapKey"
-                      ],
-                      "secrets": [
-                        "Get",
-                        "List"
-                      ],
-                      "certificates": [
-                        "Get",
-                        "List",
-                        "ListIssuers"
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
         }
       }
     }
