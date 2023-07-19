@@ -97,6 +97,7 @@
     "subscriptionId": "[subscription().subscriptionId]",
     "tenantId": "[subscription().tenantId]",
     "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]",
+    "cdnUrl": "[concat(parameters('cdnbaseurl'), '/')]",
     "multipleRevision": [
       {
         "latestRevision": true,
@@ -183,7 +184,7 @@
                 },
                 {
                   "name": "cdnBaseUrl",
-                  "value": "[parameters('cdnBaseUrl')]"
+                  "value": "[variables('cdnUrl')]"
                 },
                 {
                   "name": "AppSettings__Environment",
