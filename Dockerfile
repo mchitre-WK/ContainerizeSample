@@ -5,4 +5,4 @@ ARG appName
 WORKDIR /app
 COPY files/ ./
 
-CMD ["dotnet", $appName]
+CMD ["dotnet", ${appName}]
