@@ -11,7 +11,7 @@
     "tags": {
       "value": {}
     },
-    "resourceGroup": {
+    "logAnalysticsWorkspaceResourceGroup": {
       "value": "dev-wktaasc-core"
     }
   }
