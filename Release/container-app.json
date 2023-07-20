@@ -47,7 +47,7 @@
     "previousRevision": {
       "type": "string"
     },
-     "ASPNETCORE_ENVIRONMENT": {
+    "ASPNETCORE_ENVIRONMENT": {
       "type": "string",
       "defaultValue": "Production"
     },  
