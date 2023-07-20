@@ -14,10 +14,6 @@ variables:
   value: European Shared Assets/WKTAAE-Build-Artifacts
 - name: azureContainerRegistryName
   value: devwktaasc
-- name: webDockerFile
-  value: Dockerfile-org-mgmt-web
-- name: apiDockerFile
-  value: Dockerfile-org-mgmt-api
 
 steps:
 - task: UniversalPackages@0
@@ -63,7 +59,7 @@ steps:
   displayName: Copy web application docker file
   inputs:
     Contents: |
-      ${{ variables.webDockerFile }}
+      Dockerfile
     TargetFolder: '$(build.artifactstagingdirectory)/webapp'
 
 - task: PowerShell@2
@@ -73,7 +69,7 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      docker build -t ${webImageName}:${packageVersion} -f ${{ variables.webDockerFile }} .      
+      docker build -t ${webImageName}:${packageVersion} --build-arg $(webApp) -f Dockerfile .      
 
 - task: AzureCLI@2
   displayName: Push web container image to Azure container registry
@@ -131,7 +127,7 @@ steps:
   displayName: Copy api dockerfile
   inputs:
     Contents: |
-      ${{ variables.apiDockerFile }}
+      Dockerfile
     TargetFolder: '$(build.artifactstagingdirectory)/webapi'
 
 - task: PowerShell@2
@@ -141,7 +137,7 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      docker build -t ${apiImageName}:${packageVersion} -f ${apiDockerFile} .      
+      docker build -t ${apiImageName}:${packageVersion} --build-arg $(apiApp) -f Dockerfile .      
 
 - task: AzureCLI@2
   displayName: Push api container image to Azure container registry
