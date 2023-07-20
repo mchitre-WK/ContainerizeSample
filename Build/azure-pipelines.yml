@@ -24,8 +24,8 @@ steps:
     feedsToUse: 'external'
     externalFeedCredentials: 'wktaae-workspace-artifacts'
     feedDownloadExternal: '${{ variables.artifactsPath }}'
-    packageDownloadExternal: '${packageName}'
-    versionDownloadExternal: '${packageVersion}'
+    packageDownloadExternal: '$(packageName)'
+    versionDownloadExternal: '$(packageVersion)'
 
 - task: ExtractFiles@1
   displayName: Extract web app files/folders from zip file
@@ -69,7 +69,7 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      docker build -t ${webImageName}:${packageVersion} --build-arg $(webApp) -f Dockerfile .      
+      docker build -t $(webImageName):$(packageVersion) --build-arg $(webApp) -f Dockerfile .      
 
 - task: AzureCLI@2
   displayName: Push web container image to Azure container registry
@@ -79,8 +79,8 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       az acr login --name ${{ variables.azureContainerRegistryName }}
-      docker tag ${webImageName}:${packageVersion} ${{ variables.azureContainerRegistryName }}.azurecr.io/${webImageName}:${packageVersion}
-      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${webImageName}:${packageVersion}
+      docker tag $(webImageName):$(packageVersion) ${{ variables.azureContainerRegistryName }}.azurecr.io/$(webImageName):$(packageVersion)
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/$(webImageName):$(packageVersion)
 
 - task: PowerShell@2
   displayName: Delete web application files after image is built
@@ -137,7 +137,7 @@ steps:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      docker build -t ${apiImageName}:${packageVersion} --build-arg $(apiApp) -f Dockerfile .      
+      docker build -t $(apiImageName):$(packageVersion) --build-arg $(apiApp) -f Dockerfile .      
 
 - task: AzureCLI@2
   displayName: Push api container image to Azure container registry
@@ -147,8 +147,8 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       az acr login --name ${{ variables.azureContainerRegistryName }}
-      docker tag ${apiImageName}:${packageVersion} ${{ variables.azureContainerRegistryName }}.azurecr.io/${apiImageName}:${packageVersion}
-      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/${apiImageName}:${packageVersion}
+      docker tag $(apiImageName):$(packageVersion) ${{ variables.azureContainerRegistryName }}.azurecr.io/$(apiImageName):$(packageVersion)
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/$(apiImageName):$(packageVersion)
 
 - task: CopyFiles@2
   displayName: Copy Cdn, Swagger, Build and release files 
