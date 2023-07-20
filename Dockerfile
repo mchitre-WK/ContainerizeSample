@@ -1,8 +1,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 
-ARG appName
-ENV APP_NAME=${appName}
+ARG APP_NAME
+
 WORKDIR /app
 COPY files/ ./
 
-CMD ["dotnet", ${APP_NAME}]
+ENV PROG_NAME=${APP_NAME}
+
+CMD ["dotnet", ${PROG_NAME}]
