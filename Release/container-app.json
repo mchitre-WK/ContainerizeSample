@@ -52,7 +52,7 @@
       "defaultValue": "Production"
     },  
     "enableKeyvaultAccess": {
-      "type": "bool"
+      "type": "string"
     },   
     "vaultResourceGroup": {
       "type": "string"
@@ -61,7 +61,7 @@
       "type": "string"
     },
     "enableRedisAccess": {
-      "type": "bool"
+      "type": "string"
     },
     "redisCacheAccountName": {
       "type": "string"
@@ -160,7 +160,7 @@
       }
     },
     {
-      "condition": "[parameters('enableKeyvaultAccess')]",
+      "condition": "[bool(parameters('enableKeyvaultAccess'))]",
       "apiVersion": "2017-05-10",
       "name": "enableVaultSecurity",
       "type": "Microsoft.Resources/deployments",
@@ -207,7 +207,7 @@
       }
     },
     {
-      "condition": "[parameters('enableRedisAccess')]",
+      "condition": "[bool(parameters('enableRedisAccess'))]",
       "apiVersion": "2017-05-10",
       "name": "setupRoleAssignments",
       "type": "Microsoft.Resources/deployments",
