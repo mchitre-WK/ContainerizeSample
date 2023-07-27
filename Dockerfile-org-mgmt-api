@@ -3,4 +3,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY files/ ./
 
-CMD ["dotnet", "Wktaae.OrganizationManagement.Api.dll"]
+CMD ["dotnet", "WKTAAE.OrganizationManagement.Api.dll"]
