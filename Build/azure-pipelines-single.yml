@@ -28,74 +28,6 @@ steps:
     versionDownloadExternal: '$(packageVersion)'
 
 - task: ExtractFiles@1
-  displayName: Extract web app files/folders from zip file
-  inputs:
-    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Web.zip'
-    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/web'
-    cleanDestinationFolder: true
-    overwriteExistingFiles: false
-
-- task: PowerShell@2
-  displayName: Copy web Application files
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
-      
-      # Create destination folder
-      md $(build.artifactstagingdirectory)/webapp
-      md $(build.artifactstagingdirectory)/webapp/files
-
-      Write-Host "Copy the nested publish directory contents of .net application"
-      
-      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/web' -Filter Out -Recurse -Force |
-          # Those 'filter' file objects should be folders
-          Where-Object {$_.PSIsContainer} |
-                ForEach-Object {        
-                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapp/files' -Force -Recurse
-              }
-
-- task: CopyFiles@2
-  displayName: Copy web application docker file
-  inputs:
-    Contents: |
-      $(webDockerfile)
-    TargetFolder: '$(build.artifactstagingdirectory)/webapp'
-
-- task: PowerShell@2
-  displayName: Build web application image
-  inputs:
-    workingDirectory: '$(build.artifactstagingdirectory)/webapp'
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
-      docker build -t $(webImageName):$(packageVersion) -f $(webDockerfile) .      
-
-- task: AzureCLI@2
-  displayName: Push web container image to Azure container registry
-  inputs:
-    azureSubscription: 'Azure-Workspace-Dev'
-    scriptType: 'pscore'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az acr login --name ${{ variables.azureContainerRegistryName }}
-      docker tag $(webImageName):$(packageVersion) ${{ variables.azureContainerRegistryName }}.azurecr.io/$(webImageName):$(packageVersion)
-      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/$(webImageName):$(packageVersion)
-
-- task: PowerShell@2
-  displayName: Delete web application files after image is built
-  inputs:
-    targetType: 'inline'
-    script: |
-      # Write your PowerShell commands here.
-      
-      # delete destination folder
-      rm $(build.artifactstagingdirectory)/webapp -r
-      rm $(System.DefaultWorkingDirectory)/publish/web -r
-
-      Write-Host "Deleted the webapp directories"
-
-- task: ExtractFiles@1
   displayName: Extract api app files/folders from zip file
   inputs:
     archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Api.zip'
@@ -151,10 +83,9 @@ steps:
       docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/$(apiImageName):$(packageVersion)
 
 - task: CopyFiles@2
-  displayName: Copy Cdn, Swagger, Build and release files 
+  displayName: Copy Swagger, Build and release files 
   inputs:
     Contents: |
-      $(System.DefaultWorkingDirectory)/*/drop/cdnContent/**
       $(System.DefaultWorkingDirectory)/*/drop/swagger.json
       Release/**
     TargetFolder: '$(build.artifactstagingdirectory)'
