@@ -1,0 +1,182 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: artifactsPath
+  value: European Shared Assets/WKTAAE-Build-Artifacts
+- name: azureContainerRegistryName
+  value: devwktaasc
+
+steps:
+- task: UniversalPackages@0
+  displayName: Download application artifacts from WKTAEE repo
+  inputs:
+    command: 'download'
+    downloadDirectory: '$(System.DefaultWorkingDirectory)'
+    feedsToUse: 'external'
+    externalFeedCredentials: 'wktaae-workspace-artifacts'
+    feedDownloadExternal: '${{ variables.artifactsPath }}'
+    packageDownloadExternal: '$(packageName)'
+    versionDownloadExternal: '$(packageVersion)'
+
+- task: ExtractFiles@1
+  displayName: Extract web app files/folders from zip file
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Web.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/web'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: false
+
+- task: PowerShell@2
+  displayName: Copy web Application files
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # Create destination folder
+      md $(build.artifactstagingdirectory)/webapp
+      md $(build.artifactstagingdirectory)/webapp/files
+
+      Write-Host "Copy the nested publish directory contents of .net application"
+      
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/web' -Filter Out -Recurse -Force |
+          # Those 'filter' file objects should be folders
+          Where-Object {$_.PSIsContainer} |
+                ForEach-Object {        
+                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapp/files' -Force -Recurse
+              }
+
+- task: CopyFiles@2
+  displayName: Copy web application docker file
+  inputs:
+    Contents: |
+      $(webDockerfile)
+    TargetFolder: '$(build.artifactstagingdirectory)/webapp'
+
+- task: PowerShell@2
+  displayName: Build web application image
+  inputs:
+    workingDirectory: '$(build.artifactstagingdirectory)/webapp'
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      docker build -t $(webImageName):$(packageVersion) -f $(webDockerfile) .      
+
+- task: AzureCLI@2
+  displayName: Push web container image to Azure container registry
+  inputs:
+    azureSubscription: 'Azure-Workspace-Dev'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login --name ${{ variables.azureContainerRegistryName }}
+      docker tag $(webImageName):$(packageVersion) ${{ variables.azureContainerRegistryName }}.azurecr.io/$(webImageName):$(packageVersion)
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/$(webImageName):$(packageVersion)
+
+- task: PowerShell@2
+  displayName: Delete web application files after image is built
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # delete destination folder
+      rm $(build.artifactstagingdirectory)/webapp -r
+      rm $(System.DefaultWorkingDirectory)/publish/web -r
+
+      Write-Host "Deleted the webapp directories"
+
+- task: ExtractFiles@1
+  displayName: Extract api app files/folders from zip file
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Api.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/publish/api'
+    cleanDestinationFolder: true
+    overwriteExistingFiles: false
+
+- task: PowerShell@2
+  displayName: Copy api application files
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # Create destination folder
+      md $(build.artifactstagingdirectory)/webapi
+      md $(build.artifactstagingdirectory)/webapi/files
+
+      Write-Host "Copy the nested publish directory contents of .net application"
+      
+      Get-ChildItem -Path '$(System.DefaultWorkingDirectory)/publish/api' -Filter Out -Recurse -Force |
+          # Those 'filter' file objects should be folders
+          Where-Object {$_.PSIsContainer} |
+                ForEach-Object {        
+                  Copy-Item -Path (Join-Path -Path $_.FullName -ChildPath '\*') -Destination '$(build.artifactstagingdirectory)/webapi/files' -Force -Recurse
+              }
+
+- task: CopyFiles@2
+  displayName: Copy api dockerfile
+  inputs:
+    Contents: |
+      $(apiDockerfile)
+    TargetFolder: '$(build.artifactstagingdirectory)/webapi'
+
+- task: PowerShell@2
+  displayName: Build api image
+  inputs:
+    workingDirectory: '$(build.artifactstagingdirectory)/webapi'
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      docker build -t $(apiImageName):$(packageVersion) -f $(apiDockerfile) .      
+
+- task: AzureCLI@2
+  displayName: Push api container image to Azure container registry
+  inputs:
+    azureSubscription: 'Azure-Workspace-Dev'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login --name ${{ variables.azureContainerRegistryName }}
+      docker tag $(apiImageName):$(packageVersion) ${{ variables.azureContainerRegistryName }}.azurecr.io/$(apiImageName):$(packageVersion)
+      docker push ${{ variables.azureContainerRegistryName }}.azurecr.io/$(apiImageName):$(packageVersion)
+
+- task: CopyFiles@2
+  displayName: Copy Cdn, Swagger, Build and release files 
+  inputs:
+    Contents: |
+      $(System.DefaultWorkingDirectory)/*/drop/cdnContent/**
+      $(System.DefaultWorkingDirectory)/*/drop/swagger.json
+      Release/**
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PowerShell@2
+  displayName: Delete api application files after image is built
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      # Delete destination folder     
+      rm $(build.artifactstagingdirectory)/webapi -r
+      rm $(System.DefaultWorkingDirectory)/publish/api -r
+     
+      Write-Host "Deleted the api directories"
+
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish application files for release
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
