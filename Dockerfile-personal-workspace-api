@@ -3,4 +3,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY files/ ./
 
-CMD ["dotnet", "WKTAAE.PersonalWorkspace.Api.dll"]
+CMD ["dotnet", "Wktaae.PersonalWorkspace.Api.dll"]
