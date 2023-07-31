@@ -30,7 +30,7 @@ steps:
 - task: ExtractFiles@1
   displayName: Extract api app files/folders from zip file
   inputs:
-    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*.Api.zip'
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/*/drop/*Api.zip'
     destinationFolder: '$(System.DefaultWorkingDirectory)/publish/api'
     cleanDestinationFolder: true
     overwriteExistingFiles: false
