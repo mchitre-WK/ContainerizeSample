@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "enableStorageAccess": {
+      "type": "string"
+    },
+    "coreResourceGroup": {
+      "type": "string"
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "resourceGroup": {
+      "type": "string"
+    },
+    "containerName": {
+      "type": "string"
+    },
+    "guid": {
+      "type": "string"
+    }    
+  },
+  "variables": {
+    "appIdentityResourceId": "[resourceId(parameters('resourceGroup'), 'Microsoft.App/containerapps', parameters('containerName'))]"
+  },
+  "resources": [
+    {
+      "condition": "[equals(parameters('enableStorageAccess'),'Yes')]",
+      "apiVersion": "2017-05-10",
+      "name": "setupRoleAssignments",
+      "type": "Microsoft.Resources/deployments",
+      "resourceGroup": "[parameters('coreResourceGroup')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "appIdentityResourceId": {
+            "value": "[variables('appIdentityResourceId')]"
+          },
+          "storageAccountName": {
+            "value": "[parameters('storageAccountName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "appIdentityResourceId": {
+              "type": "string"
+            },
+            "storageAccountName": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "storageAccount": "[parameters('storageAccountName')]",
+            "storageBlobDataContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+              "apiVersion": "2018-09-01-preview",
+              "name": "[concat(variables('storageAccount'), '/Microsoft.Authorization/', parameters('guid')]",
+              "properties": {
+                "roleDefinitionId": "[variables('storageBlobDataContributor')]",
+                "principalId": "[reference(parameters('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
