@@ -63,7 +63,7 @@
             {
               "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
               "apiVersion": "2018-09-01-preview",
-              "name": "[concat(variables('storageAccount'), '/Microsoft.Authorization/', parameters('guid')]",
+              "name": "[concat(variables('storageAccount'), '/Microsoft.Authorization/', parameters('guid'))]",
               "properties": {
                 "roleDefinitionId": "[variables('storageBlobDataContributor')]",
                 "principalId": "[reference(parameters('appIdentityResourceId'), '2022-11-01-preview', 'Full').identity.principalId]",
