@@ -42,6 +42,9 @@
           },
           "storageAccountName": {
             "value": "[parameters('storageAccountName')]"
+          },
+          "guid": {
+            "value": "[parameters('guid')]"
           }
         },
         "template": {
@@ -52,6 +55,9 @@
               "type": "string"
             },
             "storageAccountName": {
+              "type": "string"
+            },
+            "guid": {
               "type": "string"
             }
           },
